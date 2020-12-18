@@ -7,9 +7,8 @@ FROM node:latest
 WORKDIR /api
 
 # add `/app/node_modules/.bin` to $PATH
-ENV PATH /fymate/node_modules/.bin:$PATH
+ENV PATH /api/node_modules/.bin:$PATH
 ENV HTTPS FALSE
-
 
 # install app dependencies
 COPY package.json ./
