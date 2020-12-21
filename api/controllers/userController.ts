@@ -37,8 +37,7 @@ class UserController {
             try //try push to database
             {
                   let uid = User.create(u);
-                  u._id = await uid;
-                  res.status(200).send(u._id);
+                  res.status(200).send(await uid);
             }
             catch (err) {
                   console.log(err)
@@ -47,17 +46,17 @@ class UserController {
       }
 
 
-      generateTokens(req: Request, user: User) {
+      generateTokens(req: Request, userID: string) {
             //create access token, with subject user._id, sign with our secret and expire in TTL milliseconds
             if (JWT_ACCESS_TOKEN_SECRET !== undefined) {
-                  let access_token = jwt.sign({ sub: user._id, type: "ACCESS_TOKEN" },
+                  let access_token = jwt.sign({ sub: userID, type: "ACCESS_TOKEN" },
                         JWT_ACCESS_TOKEN_SECRET,
                         { expiresIn: JWT_ACCESS_TOKEN_SECRET ? JWT_ACCESS_TOKEN_SECRET : 500 })
             }
 
             if (JWT_REFRESH_TOKEN_SECRET !== undefined) {
                   //create refresh token, with subject user._id, sign with our secret and expire in TTL milliseconds
-                  let refresh_token = jwt.sign({ sub: user._id, type: "REFRESH_TOKEN" },
+                  let refresh_token = jwt.sign({ sub: userID, type: "REFRESH_TOKEN" },
                         JWT_REFRESH_TOKEN_SECRET,
                         { expiresIn: JWT_REFRESH_TOKEN_TTL ? JWT_REFRESH_TOKEN_TTL : 1000 })
             }
@@ -74,12 +73,12 @@ class UserController {
 
             try {
                   //First find user in db
-                  let u = await User.getUserCollection().then(r => r.findOne({ username: req.body.username }))
+                  let u = await User.getUserCollection().then(r => r.findOne({ username: req.body.username }));
                   let passHash = u.passwordHash;
                   //Now having user and password hash compare credentials
 
                   if (await bcrypt.compare(req.body.password, passHash)) {
-                        res.json(this.generateTokens(req, u));
+                        res.json(this.generateTokens(req, u._id));
                   }
             }
             catch {
