@@ -54,7 +54,7 @@ class UserController {
             if (JWT_ACCESS_TOKEN_SECRET !== undefined) {
                   let access_token = jwt.sign({ sub: userID, type: "ACCESS_TOKEN" },
                         JWT_ACCESS_TOKEN_SECRET,
-                        { expiresIn: JWT_ACCESS_TOKEN_SECRET ? JWT_ACCESS_TOKEN_SECRET : 500 })
+                        { expiresIn: JWT_ACCESS_TOKEN_TTL ? JWT_ACCESS_TOKEN_TTL : 500 })
             }
             else
                   throw "access secret not found";
