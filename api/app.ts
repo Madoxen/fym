@@ -6,11 +6,10 @@ import express from 'express';
 import createError from 'http-errors';
 import path from 'path'
 import logger from 'morgan'
-
 import usersRouter from './routes/users'
 import indexRouter from './routes/index'
 import { Request, Response, NextFunction } from 'express';
-
+import db from './db';
 
 const PORT = process.env.PORT || 3000;
 var app = express();

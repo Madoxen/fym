@@ -1,18 +1,13 @@
 import MongoClient from 'mongodb'
 
 
+var db: MongoClient.Db;
 
-class apiDB {
-    db!: MongoClient.Db 
 
-    constructor() {
-        let instance = this;
-        MongoClient.connect('mongodb://mongodb:27017', function (err, client) {
-            if (err) throw err
-
-            instance.db = client.db('fymate') //select database
-        })
-    }
+async function getDb() {
+    if (db === undefined)
+        db = (await MongoClient.connect('mongodb://mongodb:27017')).db('fymate')
+    return db;
 }
 
-export default apiDB;
+export default getDb;
