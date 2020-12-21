@@ -27,10 +27,13 @@ class UserController {
             const salt = await bcrypt.genSalt(10);
             const pass_hash = await bcrypt.hash(req.body.password, salt);
 
-
             let existing = await User.getUserCollection().then(r => r.findOne({ username: req.body.username }))
-            if (existing !== undefined)
+            if (existing !== undefined && existing !== null)
+            {
                   res.status(409).send();
+                  return;
+            }
+                  
 
             //create new user
             let u = new User(req.body.username, req.body.email, pass_hash);
