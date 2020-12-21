@@ -14,7 +14,9 @@ ENV HTTPS FALSE
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm install
-RUN npm build
+
+#build typescript
+RUN npm run-script build
 
 # add app
 COPY . ./
