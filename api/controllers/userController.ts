@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 import createError from 'http-errors';
 import User from '../models/user';
 import jwt from 'jsonwebtoken';
+import { exception } from 'console';
 
 
 
@@ -28,19 +29,18 @@ class UserController {
             const pass_hash = await bcrypt.hash(req.body.password, salt);
 
             let existing = await User.getUserCollection().then(r => r.findOne({ username: req.body.username }))
-            if (existing !== undefined && existing !== null)
-            {
+            if (existing !== undefined && existing !== null) {
                   res.status(409).send();
                   return;
             }
-                  
+
 
             //create new user
             let u = new User(req.body.username, req.body.email, pass_hash);
             try //try push to database
             {
                   let uid = User.create(u);
-                  res.status(200).send(await uid);
+                  res.status(200).send(this.generateTokens(req, await uid));
             }
             catch (err) {
                   console.log(err)
@@ -56,6 +56,8 @@ class UserController {
                         JWT_ACCESS_TOKEN_SECRET,
                         { expiresIn: JWT_ACCESS_TOKEN_SECRET ? JWT_ACCESS_TOKEN_SECRET : 500 })
             }
+            else
+                  throw "access secret not found";
 
             if (JWT_REFRESH_TOKEN_SECRET !== undefined) {
                   //create refresh token, with subject user._id, sign with our secret and expire in TTL milliseconds
@@ -63,6 +65,8 @@ class UserController {
                         JWT_REFRESH_TOKEN_SECRET,
                         { expiresIn: JWT_REFRESH_TOKEN_TTL ? JWT_REFRESH_TOKEN_TTL : 1000 })
             }
+            else
+                  throw "refresh secret not found";
       }
 
 
