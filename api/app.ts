@@ -1,29 +1,33 @@
+//Fymate main api server
+//Only serves info and API data
+//Does not serve any website components
+
 import express from 'express';
 import createError from 'http-errors';
 import path from 'path'
 import logger from 'morgan'
 
-import indexRouter from './routes/index'
 import usersRouter from './routes/users'
+import indexRouter from './routes/index'
 import { Request, Response, NextFunction } from 'express';
 
+
+const PORT = process.env.PORT || 3000;
 var app = express();
+
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
 });
 
-// error handler
+// error handler middleware
 app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
   // set locals, only providing error in development
   res.locals.message = err.message;
@@ -33,4 +37,6 @@ app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
   res.render('error', { error: err })
 });
 
+
+app.listen(PORT);
 export default app;

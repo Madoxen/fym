@@ -1,4 +1,4 @@
-import DB  from '../db'
+import UserDB  from '../db'
 
 
 class User
