@@ -51,8 +51,10 @@ class UserController {
 
       generateTokens(req: Request, userID: string) {
             //create access token, with subject user._id, sign with our secret and expire in TTL milliseconds
+            let access_token: string = "";
+            let refresh_token: string = "";
             if (JWT_ACCESS_TOKEN_SECRET !== undefined) {
-                  let access_token = jwt.sign({ sub: userID, type: "ACCESS_TOKEN" },
+                  access_token = jwt.sign({ sub: userID, type: "ACCESS_TOKEN" },
                         JWT_ACCESS_TOKEN_SECRET,
                         { expiresIn: JWT_ACCESS_TOKEN_TTL ? JWT_ACCESS_TOKEN_TTL : 500 })
             }
@@ -61,12 +63,15 @@ class UserController {
 
             if (JWT_REFRESH_TOKEN_SECRET !== undefined) {
                   //create refresh token, with subject user._id, sign with our secret and expire in TTL milliseconds
-                  let refresh_token = jwt.sign({ sub: userID, type: "REFRESH_TOKEN" },
+                  refresh_token = jwt.sign({ sub: userID, type: "REFRESH_TOKEN" },
                         JWT_REFRESH_TOKEN_SECRET,
                         { expiresIn: JWT_REFRESH_TOKEN_TTL ? JWT_REFRESH_TOKEN_TTL : 1000 })
             }
             else
                   throw "refresh secret not found";
+
+
+            return {acc: access_token, ref: refresh_token }
       }
 
 
@@ -86,6 +91,10 @@ class UserController {
 
                   if (await bcrypt.compare(req.body.password, passHash)) {
                         res.json(this.generateTokens(req, u._id));
+                  }
+                  else
+                  {
+                        throw "password bad ree";
                   }
             }
             catch {
