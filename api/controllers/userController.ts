@@ -27,8 +27,9 @@ class UserController {
                   u.ID = await uid;
                   res.status(200).send(u.ID);
             }
-            catch
+            catch(err)
             {
+                  console.log(err)
                   res.status(500).send();
             }
       }
