@@ -3,9 +3,9 @@ import bcrypt from 'bcrypt'
 import { Request, Response, NextFunction } from 'express';
 import createError from 'http-errors';
 import User from '../models/user';
-import jwt from 'jsonwebtoken';
+import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import { exception } from 'console';
-
+import { ObjectId } from 'mongodb';
 
 
 const JWT_ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_TOKEN_SECRET;
@@ -13,16 +13,15 @@ const JWT_REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_TOKEN_SECRET;
 const JWT_ACCESS_TOKEN_TTL = process.env.JWT_ACCESS_TOKEN_TTL;
 const JWT_REFRESH_TOKEN_TTL = process.env.JWT_REFRESH_TOKEN_TTL;
 
-
-class UserController {
+//This controller provides auth services for users
+//Uses JWT as an auth mechanism
+class AuthController {
 
       constructor() {
-            this.registerNewUser = this.registerNewUser.bind(this);
-            this.login = this.login.bind(this);
-            this.logout = this.logout.bind(this);
+
       }
 
-      async registerNewUser(req: Request, res: Response, next: NextFunction) {
+      registerNewUser = async (req: Request, res: Response) => {
 
             //Hash password
             const salt = await bcrypt.genSalt(10);
@@ -49,7 +48,7 @@ class UserController {
       }
 
 
-      generateTokens(req: Request, userID: string) {
+      generateTokens = (req: Request, userID: string) => {
             //create access token, with subject user._id, sign with our secret and expire in TTL milliseconds
             let access_token: string = "";
             let refresh_token: string = "";
@@ -77,7 +76,7 @@ class UserController {
 
 
       //Check credentials and send access token
-      async login(req: Request, res: Response, next: NextFunction) {
+      login = async (req: Request, res: Response) => {
             if (!req.body.username)
                   res.status(401).send("Username missing");
 
@@ -103,10 +102,56 @@ class UserController {
             }
       }
 
-      //Remove access token
-      async logout(req: Request, res: Response, next: NextFunction) {
+      refreshToken = async (req: Request, res: Response) => {
+            // Verify refreshToken 
+            if (JWT_REFRESH_TOKEN_SECRET !== undefined && JWT_REFRESH_TOKEN_SECRET !== null) {
+                  if (!req.headers.authorization) {
+                        return res.status(401).send({
+                              message: "Auth header missing"
+                        })
+                  }
+
+
+                  const BEARER = 'Bearer'
+                  const REFRESH_TOKEN = req.headers.authorization.split(' ') //split BEARER TOKEN
+
+                  if (REFRESH_TOKEN[0] !== BEARER) {
+                        return res.status(401).send({
+                              error: "Missing bearer"
+                        })
+                  }
+
+                  //Verify user token with our secret
+                  //If JWT was changed, it's signature cannot be correct without the key
+                  //so for example non admin user could not get admin access simply by changing admin field
+
+                  jwt.verify(REFRESH_TOKEN[1], JWT_REFRESH_TOKEN_SECRET, async (err: any, payload: any) => {
+                        if (err) {
+                              return res.status(401).send({
+                                    error: "Token refresh is invalid"
+                              });
+                        }
+
+                        let u = await User.getUserCollection().then(r => r.findOne({ _id: new ObjectId(payload.sub) }))
+                        console.log(payload.sub);
+                        if (!u) {
+                              return res.status(401).send({
+                                    error: 'User not found'
+                              });
+                        }
+
+                        return res.json(this.generateTokens(req, req.body._id)); //return new fresh tokens (both access and refresh tokens)
+                  });
+            }
+            else {
+                  return res.status(500).send("Secret missing");
+            }
+      }
+
+      //Remove access token (note to myself: )
+      logout = async (req: Request, res: Response, next: NextFunction) => {
 
       }
 }
 
-export default UserController;
+export default AuthController;
