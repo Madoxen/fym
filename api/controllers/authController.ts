@@ -2,7 +2,7 @@
 import bcrypt from 'bcrypt'
 import { Request, Response, NextFunction } from 'express';
 import createError from 'http-errors';
-import User from '../models/user';
+import UserAccount from '../models/userAccount';
 import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import { exception } from 'console';
 import { ObjectId } from 'mongodb';
@@ -27,7 +27,7 @@ class AuthController {
             const salt = await bcrypt.genSalt(10);
             const pass_hash = await bcrypt.hash(req.body.password, salt);
 
-            let existing = await User.getUserCollection().then(r => r.findOne({ username: req.body.username }))
+            let existing = await UserAccount.getUserCollection().then(r => r.findOne({ username: req.body.username }))
             if (existing !== undefined && existing !== null) {
                   res.status(409).send();
                   return;
@@ -35,10 +35,10 @@ class AuthController {
 
 
             //create new user
-            let u = new User(req.body.username, req.body.email, pass_hash);
+            let u = new UserAccount(req.body.username, req.body.email, pass_hash);
             try //try push to database
             {
-                  let uid = User.create(u);
+                  let uid = UserAccount.create(u);
                   res.status(200).send(this.generateTokens(req, await uid));
             }
             catch (err) {
@@ -86,7 +86,7 @@ class AuthController {
 
             try {
                   //First find user in db
-                  let u = await User.getUserCollection().then(r => r.findOne({ username: req.body.username }));
+                  let u = await UserAccount.getUserCollection().then(r => r.findOne({ username: req.body.username }));
                   let passHash = u.passwordHash;
                   //Now having user and password hash compare credentials
 
@@ -132,7 +132,7 @@ class AuthController {
                               });
                         }
 
-                        let u = await User.getUserCollection().then(r => r.findOne({ _id: new ObjectId(payload.sub) }))
+                        let u = await UserAccount.getUserCollection().then(r => r.findOne({ _id: new ObjectId(payload.sub) }))
                         console.log(payload.sub);
                         if (!u) {
                               return res.status(401).send({
@@ -146,11 +146,6 @@ class AuthController {
             else {
                   return res.status(500).send("Secret missing");
             }
-      }
-
-      //Remove access token (note to myself: )
-      logout = async (req: Request, res: Response, next: NextFunction) => {
-
       }
 }
 

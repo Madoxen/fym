@@ -2,7 +2,7 @@ import { Collection } from 'mongodb';
 import getDb from '../db';
 
 //User account definition, contains CRUD methods
-class User {
+class UserAccount {
     email: string;
     passwordHash: string;
     username: string;
@@ -17,28 +17,28 @@ class User {
     }
 
     //Push user object into database, and return id
-    static async create(usr: User): Promise<string> {
-        return (await (await User.getUserCollection()).insertOne(usr)).insertedId;
+    static async create(usr: UserAccount): Promise<string> {
+        return (await (await UserAccount.getUserCollection()).insertOne(usr)).insertedId;
     }
 
     //Update user object that has the same ID 
-    static async update(usr: User, id: string) {
-        (await User.getUserCollection()).updateOne({ _id: id }, usr)
+    static async update(usr: UserAccount, id: string) {
+        (await UserAccount.getUserCollection()).updateOne({ _id: id }, usr)
     }
 
     static async remove(id: string) {
-        (await User.getUserCollection()).deleteOne({ _id: id });
+        (await UserAccount.getUserCollection()).deleteOne({ _id: id });
     }
 
     static async getUserCollection(): Promise<Collection<any>> {
-        if (User._userCollection === undefined)
-            User._userCollection = (await getDb()).collection('users');
-        return User._userCollection;
+        if (UserAccount._userCollection === undefined)
+            UserAccount._userCollection = (await getDb()).collection('users');
+        return UserAccount._userCollection;
     }
 
 
 }
 
-export default User;
+export default UserAccount;
 
 
