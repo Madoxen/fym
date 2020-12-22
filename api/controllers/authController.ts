@@ -7,6 +7,7 @@ import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import { exception } from 'console';
 import { ObjectId } from 'mongodb';
 import isNullOrUndefined from '../utils';
+import UserDetails from '../models/userDetails';
 
 
 const JWT_ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_TOKEN_SECRET;
@@ -24,26 +25,36 @@ class AuthController {
 
       registerNewUser = async (req: Request, res: Response) => {
 
+            if (req.body.password === undefined)
+                  return res.status(400).send();
+
+            if (req.body.username === undefined)
+                  return res.status(400).send();
+
+            if (req.body.email === undefined)
+                  return res.status(400).send();
+
             //Hash password
             const salt = await bcrypt.genSalt(10);
             const pass_hash = await bcrypt.hash(req.body.password, salt);
 
             let existing = await UserAccount.getUserCollection().then(r => r.findOne({ username: req.body.username }))
             if (existing !== undefined && existing !== null) { //If exists user with username
-                  res.status(409).send(); //Send 409 (conflict) because we cannot create user with the same username as existing user
-                  return;
+                  return res.status(409).send(); //Send 409 (conflict) because we cannot create user with the same username as existing user
             }
 
             //create new user
             let u = new UserAccount(req.body.username, req.body.email, pass_hash);
+            let ud = new UserDetails(req.body.username);
             try //try push to database
             {
                   let uid = await UserAccount.create(u); //wait for DB
-                  res.status(200).send(this.generateTokens(req, u.username)); //after DB has successfully inserted a user, send 200
+                  let udid = await UserDetails.create(ud);
+                  return res.status(200).send(this.generateTokens(req, u.username)); //after DB has successfully inserted a user, send 200
             }
             catch (err) {
                   console.log(err)
-                  res.status(500).send();
+                  return res.status(500).send();
             }
       }
 
