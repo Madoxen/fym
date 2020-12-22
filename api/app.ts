@@ -8,6 +8,7 @@ import path from 'path'
 import logger from 'morgan'
 import authRouter from './routes/auth'
 import indexRouter from './routes/index'
+import usersRouter from './routes/users'
 import { Request, Response, NextFunction } from 'express';
 import db from './db';
 
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
+app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

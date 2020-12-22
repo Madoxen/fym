@@ -2,13 +2,14 @@ import { Collection } from 'mongodb';
 import getDb from '../db';
 
 //User account definition, contains CRUD methods
+//User account information is confidential, none of these should be outside of the API server!
 class UserAccount {
-    email: string;
-    passwordHash: string;
-    username: string;
+    email: string; //confidential
+    passwordHash: string; //confidential
+    username: string; //nonconfidential
 
     //Mark this as static to avoid collection queries over and over again
-    static _userCollection: Collection<any>;
+    private static _userCollection: Collection<any>;
 
     constructor(username: string, email: string, passwordHash: string) {
         this.username = username;
