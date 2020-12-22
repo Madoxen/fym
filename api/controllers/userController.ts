@@ -56,7 +56,8 @@ class UserController {
             if (JWT_ACCESS_TOKEN_SECRET !== undefined) {
                   access_token = jwt.sign({ sub: userID, type: "ACCESS_TOKEN" },
                         JWT_ACCESS_TOKEN_SECRET,
-                        { expiresIn: JWT_ACCESS_TOKEN_TTL ? JWT_ACCESS_TOKEN_TTL : 500 })
+                        { expiresIn: JWT_REFRESH_TOKEN_TTL !== undefined && JWT_REFRESH_TOKEN_TTL !== null ? JWT_ACCESS_TOKEN_TTL + "s" : "60s" })
+
             }
             else
                   throw "access secret not found";
@@ -65,13 +66,13 @@ class UserController {
                   //create refresh token, with subject user._id, sign with our secret and expire in TTL milliseconds
                   refresh_token = jwt.sign({ sub: userID, type: "REFRESH_TOKEN" },
                         JWT_REFRESH_TOKEN_SECRET,
-                        { expiresIn: JWT_REFRESH_TOKEN_TTL ? JWT_REFRESH_TOKEN_TTL : 1000 })
+                        { expiresIn: JWT_REFRESH_TOKEN_TTL !== undefined && JWT_REFRESH_TOKEN_TTL !== null ? JWT_REFRESH_TOKEN_TTL + "s" : "600s" })
             }
             else
                   throw "refresh secret not found";
 
 
-            return {acc: access_token, ref: refresh_token }
+            return { acc: access_token, ref: refresh_token }
       }
 
 
@@ -83,6 +84,7 @@ class UserController {
             if (!req.body.password)
                   res.status(401).send("Password missing");
 
+
             try {
                   //First find user in db
                   let u = await User.getUserCollection().then(r => r.findOne({ username: req.body.username }));
@@ -92,8 +94,7 @@ class UserController {
                   if (await bcrypt.compare(req.body.password, passHash)) {
                         res.json(this.generateTokens(req, u._id));
                   }
-                  else
-                  {
+                  else {
                         throw "password bad ree";
                   }
             }
