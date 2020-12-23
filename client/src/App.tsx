@@ -1,18 +1,20 @@
 import React from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
-import { Navbar } from './components/Navbar'
+import { Navigation } from './components/Navigation'
 import { About } from './pages/About'
 import { Home } from './pages/Home'
+import { Register } from './pages/Register'
 
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <Navbar />
+      <Navigation />
       <div className="container">
         <Switch>
           <Route path="/" component={Home} exact />
           <Route path="/about" component={About} />
+          <Route path="/register" component={Register} />
         </Switch>
       </div>
     </BrowserRouter>
