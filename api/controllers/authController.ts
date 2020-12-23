@@ -55,7 +55,7 @@ class AuthController {
             if (JWT_ACCESS_TOKEN_SECRET !== undefined && JWT_ACCESS_TOKEN_SECRET !== null) {
                   access_token = jwt.sign({ sub: username, type: "ACCESS_TOKEN" },
                         JWT_ACCESS_TOKEN_SECRET,
-                        { expiresIn: JWT_REFRESH_TOKEN_TTL !== undefined && JWT_REFRESH_TOKEN_TTL !== null ? JWT_ACCESS_TOKEN_TTL + "s" : "60s" })
+                        { expiresIn: JWT_ACCESS_TOKEN_TTL !== undefined && JWT_ACCESS_TOKEN_TTL !== null ? JWT_ACCESS_TOKEN_TTL + "s" : "60s" })
 
             }
             else
