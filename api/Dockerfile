@@ -14,10 +14,12 @@ ENV HTTPS FALSE
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm install
-RUN npm build
 
 # add app
 COPY . ./
+
+#build typescript
+RUN npm run-script build
 
 # start app
 CMD ["npm", "start"]
