@@ -18,7 +18,10 @@
     // Disable <Fragment> => <> replacement. Feel free to change
     "react/jsx-fragments": "off",
     // Disable prefer default export
-    "import/prefer-default-export": "off"
+    "import/prefer-default-export": "off",
+      // Disables the rule. You can just remove it,
+      // if it is not enabled by a parent config.
+    "object-shorthand": 0
   },
   "overrides": [
     {
