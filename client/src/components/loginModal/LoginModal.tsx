@@ -1,5 +1,7 @@
 import React, { FormEvent, useState } from 'react'
 import { Button, Form, Modal } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
+import { REPLACE_TOKENS } from '../../features/auth/types';
 
 const LoginModal = () => {
     const [show, setShow] = useState(false);
@@ -8,16 +10,22 @@ const LoginModal = () => {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const dispatch = useDispatch();
+
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault();
-        console.log(`${login} ${password}`);
 
         fetch("http://api.fymate.co/auth/login", {
             method: "POST", body: JSON.stringify({ username: login, password: password }), headers: {
                 "Accept": "application/json",
                 "Content-type": "application/json; charset=UTF-8",
             }
-        });
+        }).then(r => r.json()).then(r => 
+            dispatch({
+                type: REPLACE_TOKENS,
+                tokens: { accessToken: r.acc, refreshToken: r.ref }
+            })
+        );
     };
 
     return (

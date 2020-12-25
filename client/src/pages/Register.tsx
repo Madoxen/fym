@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
+import { useDispatch } from 'react-redux'
+import { REPLACE_TOKENS } from '../features/auth/types'
 
 
 export const Register: React.FC = () => {
@@ -7,6 +9,8 @@ export const Register: React.FC = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [passwordConfirm, setPasswordConfirm] = useState("")
+    const dispatch = useDispatch()
+
 
     const onFormSubmit = (e: any) => {
         e.preventDefault()
@@ -20,7 +24,12 @@ export const Register: React.FC = () => {
                     "Accept": "application/json",
                     "Content-type": "application/json; charset=UTF-8",
                 }
-            });
+            }).then(r => r.json()).then(r =>
+                dispatch({
+                    type: REPLACE_TOKENS,
+                    tokens: { accessToken: r.acc, refreshToken: r.ref }
+                })
+            );
         }
     }
 
