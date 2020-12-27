@@ -23,12 +23,7 @@ router.get('/:username', controller.getUsers);
 //First check if they provided correct JWT token
 router.post("/:username", AuthMiddleware.verifyAccessToken);
 router.post("/:username", AuthMiddleware.verifyUserOnTokenPayload);
-<<<<<<< HEAD
 router.post("/:username", controller.updateUserProfile);
-=======
-
-
->>>>>>> master
 
 
 export default router;
