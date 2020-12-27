@@ -33,11 +33,7 @@ class AuthMiddleware {
                 })
             }
 
-<<<<<<< HEAD
-            if (token?.startsWith("Bearer ")) {
-=======
             if (token.startsWith("Bearer ")) {
->>>>>>> master
                 token = token.slice(7, token.length).trimLeft();
             }
 
