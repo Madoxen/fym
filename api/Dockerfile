@@ -1,5 +1,4 @@
-#this docker file builds API DEVELOPMENT server and then starts it
-
+#this docker file builds production
 # pull official base image
 FROM node:latest
 
