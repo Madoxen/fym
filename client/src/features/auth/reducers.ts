@@ -1,7 +1,9 @@
 import jwt from 'jsonwebtoken'
+import store from "../../store";
 import { useDispatch, useSelector } from 'react-redux';
 import { REPLACE_TOKENS, TokensActionTypes } from './types'
 import { getRefreshToken } from "./selectors"
+
 
 const initialState = {
     accessToken: '',
@@ -9,19 +11,21 @@ const initialState = {
     refreshTimeout: Infinity, // Time to token refresh
     accessTimeout: Infinity, // Time to token refresh
 }
-
-const dispatch = useDispatch();
-const refToken = useSelector(getRefreshToken)
 let refreshTimeoutID: NodeJS.Timeout | null = null;
 
+
+
 function silentRefresh() {
+
+    const dispatch = store.
+    const refToken = useSelector(getRefreshToken)
 
     fetch('http://api.fymate.co/auth/refresh', {
         method: 'POST',
         headers: {
             Accept: 'application/json',
             'Content-type': 'application/json; charset=UTF-8',
-            Authorization: "Bearer " + refToken
+            Authorization: `Bearer  + ${refToken}`
         },
     })
         .then((r) => r.json())
@@ -46,7 +50,9 @@ export default (state = initialState, action: TokensActionTypes) => {
 
             if (refreshTimeoutID !== null)
                 clearTimeout(refreshTimeoutID);
-            refreshTimeoutID = setTimeout(silentRefresh, Date.now() - decodedAcc.payload.exp);
+
+            console.log((decodedAcc.payload.exp * 1000 - Date.now()));
+            refreshTimeoutID = setTimeout(silentRefresh, 5000);
 
             return {
                 ...state,
@@ -56,6 +62,8 @@ export default (state = initialState, action: TokensActionTypes) => {
                 refreshTimeout: decodedRef.payload.exp,
             }
         } catch {
+            if (refreshTimeoutID !== null)
+                clearTimeout(refreshTimeoutID);
             // If there was an error with parsing the token, logout the user
             return state
         }
