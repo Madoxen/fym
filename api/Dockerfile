@@ -21,4 +21,4 @@ COPY . ./
 RUN npm run-script build
 
 # start app
-CMD ["npm", "start"]
+CMD ["npm", "run-script" ,"start-d"]
