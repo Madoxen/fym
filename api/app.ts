@@ -11,8 +11,27 @@ import indexRouter from './routes/index'
 import usersRouter from './routes/users'
 import { Request, Response, NextFunction } from 'express';
 import db from './db';
+<<<<<<< HEAD
 
 const PORT = process.env.PORT || 3000;
+=======
+import dotenv from 'dotenv'
+
+if (process.env.NO_ENV === undefined || process.env.NO_ENV === null) {
+  console.log("NO_ENV null or undefined, trying to load .env.local");
+  const r = dotenv.config({ path: "./.env.local" });
+
+  if (process.env.NODE_ENV !== "production") {
+    if (r.error) {
+      throw r.error
+    }
+
+    console.log(r.parsed)
+  }
+}
+
+const PORT = process.env.PORT || 10010;
+>>>>>>> master
 var app = express();
 
 

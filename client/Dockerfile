@@ -1,4 +1,4 @@
-#this docker file builds development enviroment and starts the server
+#this docker file builds production
 # pull official base image
 FROM node:latest
 

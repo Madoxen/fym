@@ -1,5 +1,4 @@
-#this docker file builds API DEVELOPMENT server and then starts it
-
+#this docker file builds production
 # pull official base image
 FROM node:latest
 
@@ -22,4 +21,4 @@ COPY . ./
 RUN npm run-script build
 
 # start app
-CMD ["npm", "start"]
+CMD ["npm", "run-script" ,"start-d"]

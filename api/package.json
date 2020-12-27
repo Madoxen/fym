@@ -3,12 +3,22 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+<<<<<<< HEAD
     "start": "node ./build/app.js",
     "build": "tsc --project ./"
+=======
+    "start": "nodemon app.ts",
+    "build": "tsc --project ./",
+    "start-d": "node ./build/app.js"
+>>>>>>> master
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
     "debug": "~2.6.9",
+<<<<<<< HEAD
+=======
+    "dotenv": "^8.2.0",
+>>>>>>> master
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^8.5.1",
