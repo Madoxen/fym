@@ -17,10 +17,10 @@ let refreshTimeoutID: NodeJS.Timeout | null = null;
 
 function silentRefresh() {
 
-    const dispatch = store.
+   /* const dispatch = useDispatch()
     const refToken = useSelector(getRefreshToken)
 
-    fetch('http://api.fymate.co/auth/refresh', {
+    fetch(process.env.API_URL + "/auth/refresh", {
         method: 'POST',
         headers: {
             Accept: 'application/json',
@@ -34,7 +34,7 @@ function silentRefresh() {
                 type: REPLACE_TOKENS,
                 tokens: { accessToken: r.acc, refreshToken: r.ref },
             })
-        )
+        )*/
 }
 
 
