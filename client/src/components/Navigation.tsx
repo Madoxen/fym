@@ -5,12 +5,35 @@ import { Link } from 'react-router-dom'
 
 export const Navigation: React.FC = () => (
   <Navbar bg="primary" variant="dark">
+<<<<<<< HEAD
     <Navbar.Brand href="/">Fymate.co</Navbar.Brand>
     <Nav className="mr-auto">
       <NavItem>   <Link className="nav-link" to="/">Home</Link> </NavItem>
       <NavItem>   <Link className="nav-link" to="/about">About</Link> </NavItem>
       <NavItem>   <Link className="nav-link" to="/register">Register</Link> </NavItem>
       <NavItem>   <Link className="nav-link" to="/profile">Profile</Link></NavItem>
+=======
+    <Navbar.Brand href="#home">Navbar</Navbar.Brand>
+    <Nav className="mr-auto">
+      <NavItem>
+        {' '}
+        <Link className="nav-link" to="/">
+          Home
+        </Link>{' '}
+      </NavItem>
+      <NavItem>
+        {' '}
+        <Link className="nav-link" to="/about">
+          About
+        </Link>{' '}
+      </NavItem>
+      <NavItem>
+        {' '}
+        <Link className="nav-link" to="/register">
+          Register
+        </Link>{' '}
+      </NavItem>
+>>>>>>> 26af0e751f9663eb7fd5fc2966f4c6e312fec657
     </Nav>
   </Navbar>
 )
