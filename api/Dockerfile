@@ -10,16 +10,6 @@ WORKDIR /api
 ENV PATH /api/node_modules/.bin:$PATH
 ENV HTTPS FALSE
 
-# install app dependencies
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm install
-
-# add app
-COPY . ./
-
-#build typescript
-RUN npm run-script build
-
 # start app
+CMD ["npm", "run-script build"]
 CMD ["npm", "start"]

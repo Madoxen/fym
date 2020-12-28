@@ -9,14 +9,6 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 ENV HTTPS FALSE
 
-# install app dependencies
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm install --silent
-RUN npm install create-react-app -g --silent
-
-# add app
-COPY . ./
 
 # start app
 CMD ["npm", "start"]

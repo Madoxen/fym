@@ -12,7 +12,7 @@ export const Home: React.FC = () => {
         Prettier for you. Take a look around ;)
       </p>
       <Counter />
-      <LoginModal/>
+      <LoginModal />
     </Fragment>
   )
 }
