@@ -12,6 +12,7 @@ ENV HTTPS FALSE
 # install app dependencies
 COPY package.json ./
 COPY package-lock.json ./
+RUN npm install -g nodemon
 RUN npm install
 
 # add app
@@ -21,4 +22,4 @@ COPY . ./
 RUN npm run-script build
 
 # start app
-CMD ["npm", "run-script" ,"start-d"]
+CMD ["npm", "run-script" ,"start"]
