@@ -122,7 +122,6 @@ class AuthController {
                         })
                   }
 
-
                   const BEARER = 'Bearer'
                   const REFRESH_TOKEN = req.headers.authorization.split(' ') //split BEARER TOKEN
 
@@ -150,7 +149,7 @@ class AuthController {
                               });
                         }
 
-                        return res.json(this.generateTokens(req, req.body.username)); //return new fresh tokens (both access and refresh tokens)
+                        return res.json(this.generateTokens(req, payload.sub)); //return new fresh tokens (both access and refresh tokens)
                   });
             }
             else {
