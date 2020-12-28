@@ -17,7 +17,6 @@ let refreshTimeoutID: NodeJS.Timeout | null = null;
 
 function silentRefresh() {
 
-   
 }
 
 
