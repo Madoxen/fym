@@ -6,9 +6,11 @@ import dotenv from 'dotenv'
 import './index.css'
 
 import App from './App'
+import TokenRefresher from './components/TokenRefresher'
 
 ReactDOM.render(
   <Provider store={store}>
+    <TokenRefresher />
     <App />
   </Provider>,
   document.getElementById('root')

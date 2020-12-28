@@ -11,32 +11,6 @@ const initialState = {
     refreshTimeout: Infinity, // Time to token refresh
     accessTimeout: Infinity, // Time to token refresh
 }
-let refreshTimeoutID: NodeJS.Timeout | null = null;
-
-
-
-function silentRefresh() {
-
-   /* const dispatch = useDispatch()
-    const refToken = useSelector(getRefreshToken)
-
-    fetch(process.env.API_URL + "/auth/refresh", {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-type': 'application/json; charset=UTF-8',
-            Authorization: `Bearer  + ${refToken}`
-        },
-    })
-        .then((r) => r.json())
-        .then((r) =>
-            dispatch({
-                type: REPLACE_TOKENS,
-                tokens: { accessToken: r.acc, refreshToken: r.ref },
-            })
-        )*/
-}
-
 
 export default (state = initialState, action: TokensActionTypes) => {
     if (action.type === REPLACE_TOKENS) {
@@ -48,12 +22,6 @@ export default (state = initialState, action: TokensActionTypes) => {
                 complete: true,
             }) as { [key: string]: any }
 
-            if (refreshTimeoutID !== null)
-                clearTimeout(refreshTimeoutID);
-
-            console.log((decodedAcc.payload.exp * 1000 - Date.now()));
-            refreshTimeoutID = setTimeout(silentRefresh, 5000);
-
             return {
                 ...state,
                 accessToken: action.tokens.accessToken,
@@ -62,8 +30,6 @@ export default (state = initialState, action: TokensActionTypes) => {
                 refreshTimeout: decodedRef.payload.exp,
             }
         } catch {
-            if (refreshTimeoutID !== null)
-                clearTimeout(refreshTimeoutID);
             // If there was an error with parsing the token, logout the user
             return state
         }
