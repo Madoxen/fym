@@ -1,7 +1,7 @@
 import { Collection, Cursor, ObjectID, ObjectId } from "mongodb";
 import { start } from "repl";
 import getDb from "../db";
-import UserDetails from "./userDetails";
+import UserDetails, { IUserDetails } from "./userDetails";
 
 
 
@@ -24,7 +24,7 @@ export class Post implements IPost {
         this._id = new ObjectID();
     }
 
-    private static userDetailsCollection: Collection<UserDetails>;
+    private static userDetailsCollection: Collection<IUserDetails>;
 
 
     static async insert(user: string, p: Post) {
@@ -41,7 +41,7 @@ export class Post implements IPost {
         (await Post.getCollection()).updateOne({ username: user }, { $pull: { posts: { _id: id } } }) //remove from embedded array
     }
 
-    static async getCollection(): Promise<Collection<UserDetails>> {
+    static async getCollection(): Promise<Collection<IUserDetails>> {
         if (Post.userDetailsCollection === undefined)
             Post.userDetailsCollection = await UserDetails.getUserCollection();
         return Post.userDetailsCollection;
@@ -52,9 +52,12 @@ export class Post implements IPost {
         return (await coll).findOne({ posts: { $elemMatch: { _id: id } } }, { projection: { 'posts.$': 1 } });
     }
 
-    static getPostRange = async (startingIndex: number, limit: number): Promise<Post[] | null> => {
+    static getPostRange = async (startingIndex: number, limit: number): Promise<Post[] | undefined[]> => {
         let coll = Post.getCollection();
-        return ((await (await coll).find({}, { projection: { posts: 1 } }).toArray()).map(x => x.posts).flat().slice(startingIndex, startingIndex + limit));
+        let a = ((await (await coll)
+            .find({}, { projection: { posts: 1 } }).toArray())
+            .map(x => x.posts).filter(p => p !== undefined).flat() as Post[])
+        return a.slice(startingIndex, startingIndex + limit);
     }
 }
 

@@ -20,13 +20,6 @@ class UserController {
     }
 
     updateUserProfile = async (req: Request, res: Response) => {
-        if (req.params.username === undefined) {
-            return res.status(400).send({ error: "username undefined" });
-        }
-
-        if (!this.isDetails(req.body)) {
-            return res.status(409).send({ error: "Provided information is not of the type UserDetails" });
-        }
 
         let newDetails = new UserDetails(req.params.username);
         newDetails.profileDescription = req.body.profileDescription;
@@ -35,7 +28,7 @@ class UserController {
         newDetails.contactEmail = req.body.contactEmail;
 
         try {
-            UserDetails.update(newDetails);
+            await UserDetails.update(newDetails);
             return res.status(200).send();
         }
         catch
@@ -43,16 +36,6 @@ class UserController {
             return res.status(500).send();
         }
     }
-
-
-    private isDetails(obj: any) {
-        return typeof (obj.username) === "string" &&
-            typeof (obj.profileDescription) === "string" &&
-            typeof (obj.visibleName) === "string" &&
-            typeof (obj.telephone) === "string" &&
-            typeof (obj.contactEmail) === "string";
-    }
-
 }
 
 

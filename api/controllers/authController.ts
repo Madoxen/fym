@@ -102,7 +102,7 @@ class AuthController {
                   //Now having user and password hash compare credentials
 
                   if (await bcrypt.compare(req.body.password, passHash)) {
-                        res.json(this.generateTokens(req, u.username));
+                        return res.json(this.generateTokens(req, u.username));
                   }
                   else {
                         throw "password bad ree";
