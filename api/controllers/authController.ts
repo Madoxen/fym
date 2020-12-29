@@ -48,8 +48,8 @@ class AuthController {
             let ud = new UserDetails(req.body.username);
             try //try push to database
             {
-                  let uid = await UserAccount.create(u); //wait for DB
-                  let udid = await UserDetails.create(ud);
+                  let uid = await UserAccount.insert(u); //wait for DB
+                  let udid = await UserDetails.insert(ud);
                   return res.status(200).send(this.generateTokens(req, u.username)); //after DB has successfully inserted a user, send 200
             }
             catch (err) {
@@ -89,10 +89,10 @@ class AuthController {
       //Check credentials and send access token
       login = async (req: Request, res: Response) => {
             if (!req.body.username)
-                  res.status(401).send("Username missing");
+                  return res.status(401).send("Username missing");
 
             if (!req.body.password)
-                  res.status(401).send("Password missing");
+                  return res.status(401).send("Password missing");
 
 
             try {
@@ -109,7 +109,7 @@ class AuthController {
                   }
             }
             catch {
-                  res.status(401).send("Username or password dont match");
+                  return res.status(401).send("Username or password dont match");
             }
       }
 

@@ -1,33 +1,38 @@
-import { Collection, Cursor } from "mongodb";
+import { Collection, Cursor, ObjectId } from "mongodb";
 import { start } from "repl";
 import getDb from "../db";
+import { Post } from "./post";
 
 
 //Class containing user details, such as profile description, visible name, contact info etc. (non confidential data that can be sent outside)
 //and CRUD methods
-class UserDetails {
 
-    readonly username: string = ""; //Used a bit like FK
+
+class UserDetails  {
+    readonly _id: ObjectId; //Unique
+    readonly username: string; //Unique
     profileDescription: string = "";
     visibleName: string = "";
     telephone: string = "";
     contactEmail: string = "";
+    posts: Post[] = []; //Embedd 
 
     //We need to provide associated username for UserDetails
     constructor(username: string) {
+        this._id = new ObjectId();
         this.username = username;
     }
 
-    private static userDetailsCollection: Collection<any>;
+    private static userDetailsCollection: Collection<UserDetails>;
 
     //Push user object into database, and return id
-    static async create(usr: UserDetails) {
+    static async insert(usr: UserDetails) {
         UserDetails.getUserCollection().then(collection => collection.insertOne(usr));
     }
 
     //Update user object that has the same ID 
     static async update(usr: UserDetails) {
-        (await UserDetails.getUserCollection()).updateOne({ username: usr.username }, {$set: usr})
+        (await UserDetails.getUserCollection()).updateOne({ username: usr.username }, { $set: usr })
     }
 
     static async remove(username: string) {

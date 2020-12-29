@@ -15,7 +15,7 @@ class UserController {
             return res.status(200).json(details);
         }
         else {
-            res.status(404).send();
+            return res.status(404).send();
         }
     }
 

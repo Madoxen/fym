@@ -1,9 +1,10 @@
-import { Collection } from 'mongodb';
+import { Collection, ObjectID } from 'mongodb';
 import getDb from '../db';
 
 //User account definition, contains CRUD methods
 //User account information is confidential, none of these should be outside of the API server!
 class UserAccount {
+    readonly _id: ObjectID;
     email: string; //confidential
     passwordHash: string; //confidential
     username: string; //nonconfidential
@@ -11,14 +12,16 @@ class UserAccount {
     //Mark this as static to avoid collection queries over and over again
     private static _userCollection: Collection<any>;
 
+    //TODO: require only readonly properties in the constructor
     constructor(username: string, email: string, passwordHash: string) {
+        this._id = new ObjectID();
         this.username = username;
         this.email = email;
         this.passwordHash = passwordHash;
     }
 
     //Push user object into database, and return id
-    static async create(usr: UserAccount): Promise<string> {
+    static async insert(usr: UserAccount): Promise<string> {
         return (await (await UserAccount.getUserCollection()).insertOne(usr)).insertedId;
     }
 
