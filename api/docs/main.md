@@ -321,8 +321,6 @@ Server failed to push into database
 Status: 500 Internal Server Error
 ```
 
-
-
 ---
 
 ### Posts
