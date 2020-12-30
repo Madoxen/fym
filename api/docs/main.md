@@ -328,6 +328,64 @@ Status: 500 Internal Server Error
 ---
 
 #### ```GET /posts```
+Returns any posts or post with specified tags
+
+#### Query Parameters
+
+1. **start** - Integer - PLANNED - starting index of query - Default: 0
+2. **limit** - Integer - PLANNED - how many objects should be retrived - Default: 10
+3. **tags** - Array of IDs - Optional - find posts with given tag ids
+
+Example:  http://{{API host}}/posts/?tags=2 - finds all posts with tag id 2
+
+Output:
+```JSON
+[
+    {
+        "postid": 13,
+        "userid": 3,
+        "content": "Yes this is another post like that :D",
+        "title": "Anotha one",
+        "tagids": [
+            2
+        ]
+    },
+    {
+        "postid": 14,
+        "userid": 3,
+        "content": "Yes this is another post like that :D",
+        "title": "Anotha one",
+        "tagids": [
+            2
+        ]
+    },
+    {
+        "postid": 15,
+        "userid": 3,
+        "content": "Yes this is another post like that :D",
+        "title": "Anotha one",
+        "tagids": [
+            1,
+            2
+        ]
+    }
+]
+```
+
+
+#### Responses
+
+Should always return 200. If none were found it will send
+empty json array []
+```HTTP
+Status: 200 OK
+```
+
+
+This only happens when exception wont be caught (so should not)
+```HTTP
+Status: 500 Internal Server Error
+```
 
 ---
 
