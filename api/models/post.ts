@@ -1,63 +1,56 @@
-import { Collection, Cursor, ObjectID, ObjectId } from "mongodb";
 import { start } from "repl";
+import db from "../db";
 import getDb from "../db";
 import UserDetails, { IUserDetails } from "./userDetails";
 
 
-
-
 export interface IPost {
+    readonly id?: number
     content: string;
     title: string;
-    tags: string[];
 }
 
 export class Post implements IPost {
 
-    readonly _id: ObjectId;
+    readonly id: number;
     content: string = "";
     title: string = "";
-    tags: string[] = [];
 
     //We need to provide associated username for Post
     constructor() {
-        this._id = new ObjectID();
+        this.id = 0;
     }
 
-    private static userDetailsCollection: Collection<IUserDetails>;
+    static async insert(userID: number, p: IPost): Promise<Post | null> {
+        console.log(p)
+        return db.query("INSERT INTO posts(userid, content, title) VALUES ($1, $2, $3) RETURNING *",
+            [userID, p.content, p.title])
+            .then(res => res.rows[0])
+            .catch(null)
+    }
 
+    static async update(p: Post): Promise<Post | null> {
+        return db.query("UPDATE posts SET content=$1, title=$2 WHERE id = $3 RETURNING *", [p.content, p.title, p.id])
+            .then(res => res.rows[0])
+            .catch(null)
+    }
 
-    static async insert(user: string, p: Post) {
-        await Post.getCollection().then(collection => collection.updateOne({ username: user }, { $push: { posts: p } }));
+    static async remove(postID: number) {
+        db.query("DELETE FROM posts WHERE postID = $1", [postID]).catch(null);
     }
 
 
-    static async update(p: IPost, id: ObjectID, user: string) {
-        (await Post.getCollection()).updateOne({ username: user }, { $set: p })
+    static getPost = async (postID: number): Promise<Post> => {
+        return db.query("SELECT * FROM posts WHERE postID = $1", [postID])
+            .then(res => res.rows[0])
+            .catch(null)
     }
 
+    static getPostRange = async (startingIndex: number = 0, limit: number = 10): Promise<Post[]> => {
 
-    static async remove(user: string, id: ObjectId) {
-        (await Post.getCollection()).updateOne({ username: user }, { $pull: { posts: { _id: id } } }) //remove from embedded array
-    }
-
-    static async getCollection(): Promise<Collection<IUserDetails>> {
-        if (Post.userDetailsCollection === undefined)
-            Post.userDetailsCollection = await UserDetails.getUserCollection();
-        return Post.userDetailsCollection;
-    }
-
-    static getPost = async (id: ObjectID): Promise<Post | null> => {
-        let coll = Post.getCollection();
-        return (await coll).findOne({ posts: { $elemMatch: { _id: id } } }, { projection: { 'posts.$': 1 } });
-    }
-
-    static getPostRange = async (startingIndex: number, limit: number): Promise<Post[] | undefined[]> => {
-        let coll = Post.getCollection();
-        let a = ((await (await coll)
-            .find({}, { projection: { posts: 1 } }).toArray())
-            .map(x => x.posts).filter(p => p !== undefined).flat() as Post[])
-        return a.slice(startingIndex, startingIndex + limit);
+        return db.query("SELECT * FROM posts LIMIT $2 OFFSET $1", [startingIndex, limit])
+            .then(res => res.rows)
+            .catch(null);
     }
 }
 

@@ -1,13 +1,10 @@
 //User controller middleware
 import bcrypt from 'bcrypt'
 import { Request, Response, NextFunction } from 'express';
-import createError from 'http-errors';
 import UserAccount from '../models/userAccount';
 import jwt, { JsonWebTokenError } from 'jsonwebtoken';
-import { exception } from 'console';
-import { ObjectId } from 'mongodb';
-import isNullOrUndefined from '../utils';
 import UserDetails from '../models/userDetails';
+import db from '../db';
 
 
 const JWT_ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_TOKEN_SECRET;
@@ -38,7 +35,7 @@ class AuthController {
             const salt = await bcrypt.genSalt(10);
             const pass_hash = await bcrypt.hash(req.body.password, salt);
 
-            let existing = await UserAccount.getUserCollection().then(r => r.findOne({ username: req.body.username }))
+            let existing = await (await db.query("SELECT * FROM auth WHERE username=$1", [req.body.username])).rows[0]
             if (existing !== undefined && existing !== null) { //If exists user with username
                   return res.status(409).send(); //Send 409 (conflict) because we cannot create user with the same username as existing user
             }
@@ -48,8 +45,11 @@ class AuthController {
             let ud = new UserDetails(req.body.username);
             try //try push to database
             {
-                  let uid = await UserAccount.insert(u); //wait for DB
-                  let udid = await UserDetails.insert(ud);
+                  let acc = await UserAccount.insert(u); //wait for DB
+                  if (acc?.id === undefined)
+                        return res.status(500).send();
+
+                  let details = await UserDetails.insert(ud, acc?.id);
                   return res.status(200).send(this.generateTokens(req, u.username)); //after DB has successfully inserted a user, send 200
             }
             catch (err) {
@@ -97,10 +97,9 @@ class AuthController {
 
             try {
                   //First find user in db
-                  let u = await UserAccount.getUserCollection().then(r => r.findOne({ username: req.body.username }));
-                  let passHash = u.passwordHash;
+                  let u = await (await db.query("SELECT * FROM auth WHERE username=$1", [req.body.username])).rows[0]
+                  let passHash = u.passwordhash;
                   //Now having user and password hash compare credentials
-
                   if (await bcrypt.compare(req.body.password, passHash)) {
                         return res.json(this.generateTokens(req, u.username));
                   }
@@ -141,7 +140,7 @@ class AuthController {
                               });
                         }
 
-                        let u = await UserAccount.getUserCollection().then(r => r.findOne({ username: payload.sub }))
+                        let u = await (await db.query("SELECT * FROM auth WHERE username=$1", [payload.sub])).rows[0]
                         console.log(payload.sub);
                         if (!u) {
                               return res.status(401).send({

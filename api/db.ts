@@ -1,16 +1,9 @@
-import MongoClient from 'mongodb'
+import { Client, Pool } from 'pg'
 
+const db_login = process.env.POSTGRES_USER;
+const db_password = process.env.POSTGRES_PASSWORD;
+const db_location = process.env.POSTGRES_URL;
 
-var db: MongoClient.Db;
+var pool: Pool = new Pool({ connectionString: "postgresql://" + db_login + ":" + db_password + "@" + db_location + "/fymate" });
 
-const db_login = process.env.MONGODB_USERNAME;
-const db_password = process.env.MONGODB_PASSWORD;
-const db_location = process.env.MONGODB_URL;
-
-async function getDb() {
-    if (db === undefined)
-        db = (await MongoClient.connect("mongodb://" + db_login + ":" + db_password + "@" + db_location)).db('fymate')
-    return db;
-}
-
-export default getDb;
+export default {query: (text : string, params: any) => pool.query(text, params)}

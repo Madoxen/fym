@@ -1,72 +1,43 @@
+import { strict } from "assert";
 import { Request, Response } from "express";
-import { ObjectID, ReplSetOptions } from "mongodb";
+import db from "../db";
 import { Post, IPost } from "../models/post";
-import UserDetails from "../models/userDetails";
-
-
-
+import UserAccount from "../models/userAccount";
 
 
 class PostController {
 
-
-
-    createPost = (req: Request, res: Response) => {
-
-        if (req.body.title === undefined)
-            return res.status(400).send({ error: "title field missing in request body" });
-        if (req.body.content === undefined)
-            return res.status(400).send({ error: "content field missing in request body" });
-        if (req.body.tags === undefined)
-            return res.status(400).send({ error: "tags field missing in request body" });
-
-        //verify if body is of IPost type
-        let p = new Post();
-        p.content = req.body.content;
-        p.title = req.body.title;
-        p.tags = req.body.tags;
+    createPost = async (req: Request<{ username: string }, IPost>, res: Response) => {
         try {
-            Post.insert(req.params.username, p);
+            let id = await UserAccount.getAccFromUsername(req.params.username).then(x => x?.id);
+            if (id === undefined)
+                return res.status(404).send({ error: "username not found" })
+            
+            Post.insert(id, req.body);
         }
         catch
         {
             return res.status(500).send({ error: "Could not insert a new document" })
         }
 
-        return res.status(200).send(p);
+        return res.status(200).send();
     }
 
-    deletePost = (req: Request, res: Response) => {
+    deletePost = async (req: Request<{ postid: number }>, res: Response) => {
 
         try {
-            Post.remove(req.params.username, new ObjectID(req.params.postid));
+            await Post.remove(req.params.postid);
         }
-        catch
+        catch 
         {
             return res.status(500).send({ error: "Could not remove a document" })
         }
         return res.status(200).send();
     }
 
-    updatePost = (req: Request, res: Response) => {
-        if (req.body.title === undefined)
-            return res.status(400).send({ error: "title field missing in request body" });
-        if (req.body.content === undefined)
-            return res.status(400).send({ error: "content field missing in request body" });
-        if (req.body.tags === undefined)
-            return res.status(400).send({ error: "tags field missing in request body" });
-
-
-
-        let p: IPost =
-        {
-            content: req.body.content,
-            title: req.body.title,
-            tags: req.body.tags,
-        }
-
+    updatePost = (req: Request<{}, IPost>, res: Response) => {
         try {
-            Post.update(p, new ObjectID(req.params.postid), req.params.username);
+            Post.update(req.body);
         }
         catch
         {
@@ -83,9 +54,11 @@ class PostController {
 
     }
 
-    getPostsForUser = async (req: Request, res: Response) => {
-        let details = await UserDetails.getUserDetails(req.params.username);
-        return res.status(200).json(details?.posts);
+
+    getPostsForUser = async (req: Request<{ username: string }>, res: Response) => {
+        let acc = await (await db.query("SELECT * FROM auth WHERE username=$1", [req.params.username])).rows[0]
+        let posts = (await db.query("SELECT * FROM posts WHERE userid=$1", [acc.id])).rows
+        return res.status(200).json(posts);
     }
 
 

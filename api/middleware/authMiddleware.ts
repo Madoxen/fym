@@ -1,12 +1,9 @@
-import bcrypt from 'bcrypt'
 import { Request, Response, NextFunction } from 'express';
-import createError from 'http-errors';
-import UserAccount from '../models/userAccount';
 import jwt, { JsonWebTokenError } from 'jsonwebtoken';
-import { exception } from 'console';
-import { ObjectId } from 'mongodb';
-import { ReplOptions } from 'repl';
-import AuthController from '../controllers/authController';
+import db from '../db';
+import UserAccount from '../models/userAccount';
+
+
 
 //Auth middleware that you can plug in to check incoming JWT tokens
 
@@ -14,6 +11,8 @@ const JWT_ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_TOKEN_SECRET;
 const JWT_REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_TOKEN_SECRET;
 const JWT_ACCESS_TOKEN_TTL = process.env.JWT_ACCESS_TOKEN_TTL;
 const JWT_REFRESH_TOKEN_TTL = process.env.JWT_REFRESH_TOKEN_TTL;
+
+
 
 
 class AuthMiddleware {
@@ -62,7 +61,7 @@ class AuthMiddleware {
         }
 
         //Check if such username exists
-        let user = await UserAccount.getUserCollection().then(r => r.findOne({ username: payload.sub }));
+        let user = await (await db.query("SELECT * FROM auth WHERE username=$1", [payload.sub])).rows[0];
 
         if (user === undefined || user === null)
             return res.status(401).send(); //user does not exist, 401 unauthorized
