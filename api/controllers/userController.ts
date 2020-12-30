@@ -16,7 +16,7 @@ class UserController {
 
             let acc = await (await db.query("SELECT id FROM auth WHERE username=$1", [req.params.username])).rows[0]
             if (acc === undefined || acc === null)
-                return res.status(404).send({ error: "Username not found" })
+                return res.status(404).send("Username not found" )
             let details = await UserDetails.getUserDetails(acc.id);
             return res.status(200).json(details);
         }
@@ -37,7 +37,7 @@ class UserController {
         try {
             let acc = await (await db.query("SELECT id FROM auth WHERE username=$1", [req.params.username])).rows[0]
             if (acc === undefined || acc === null)
-                return res.status(404).send({ error: "Username not found" })
+                return res.status(404).send("Username not found")
             await UserDetails.update({ ...req.body, id: acc.id });
             return res.status(200).send();
         }

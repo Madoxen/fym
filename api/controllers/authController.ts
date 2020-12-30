@@ -37,7 +37,7 @@ class AuthController {
 
             let existing = await (await db.query("SELECT * FROM auth WHERE username=$1", [req.body.username])).rows[0]
             if (existing !== undefined && existing !== null) { //If exists user with username
-                  return res.status(409).send(); //Send 409 (conflict) because we cannot create user with the same username as existing user
+                  return res.status(409).send("Account with given username already exists"); //Send 409 (conflict) because we cannot create user with the same username as existing user
             }
 
             //create new user
@@ -89,10 +89,10 @@ class AuthController {
       //Check credentials and send access token
       login = async (req: Request, res: Response) => {
             if (!req.body.username)
-                  return res.status(401).send("Username missing");
+                  return res.status(400).send("Username missing");
 
             if (!req.body.password)
-                  return res.status(401).send("Password missing");
+                  return res.status(400).send("Password missing");
 
 
             try {
@@ -116,18 +116,14 @@ class AuthController {
             // Verify refreshToken 
             if (JWT_REFRESH_TOKEN_SECRET !== undefined && JWT_REFRESH_TOKEN_SECRET !== null) {
                   if (!req.headers.authorization) {
-                        return res.status(401).send({
-                              message: "Auth header missing"
-                        })
+                        return res.status(400).send("Auth header missing")
                   }
 
                   const BEARER = 'Bearer'
                   const REFRESH_TOKEN = req.headers.authorization.split(' ') //split BEARER TOKEN
 
                   if (REFRESH_TOKEN[0] !== BEARER) {
-                        return res.status(401).send({
-                              error: "Missing bearer"
-                        })
+                        return res.status(400).send("Missing bearer")
                   }
 
                   //Verify user token with our secret
@@ -168,6 +164,6 @@ class AuthController {
 
       }
 }
-}
+
 
 export default AuthController;
