@@ -1,19 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt, { JsonWebTokenError } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import db from '../db';
-import UserAccount from '../models/userAccount';
-
-
 
 //Auth middleware that you can plug in to check incoming JWT tokens
-
 const JWT_ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_TOKEN_SECRET;
 const JWT_REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_TOKEN_SECRET;
 const JWT_ACCESS_TOKEN_TTL = process.env.JWT_ACCESS_TOKEN_TTL;
 const JWT_REFRESH_TOKEN_TTL = process.env.JWT_REFRESH_TOKEN_TTL;
-
-
-
 
 class AuthMiddleware {
 
@@ -69,6 +62,5 @@ class AuthMiddleware {
         return next(); //if everythings OK, go to next middleware
     }
 }
-
 
 export default AuthMiddleware;

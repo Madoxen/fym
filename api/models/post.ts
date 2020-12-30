@@ -8,6 +8,7 @@ export interface IPost {
     readonly id?: number
     content: string;
     title: string;
+    tagIDs: number[];
 }
 
 export class Post implements IPost {
@@ -15,28 +16,50 @@ export class Post implements IPost {
     readonly id: number;
     content: string = "";
     title: string = "";
+    tagIDs: number[] = [];
 
     //We need to provide associated username for Post
-    constructor() {
-        this.id = 0;
+    constructor(id: number) {
+        this.id = id
     }
 
-    static async insert(userID: number, p: IPost): Promise<Post | null> {
-        console.log(p)
-        return db.query("INSERT INTO posts(userid, content, title) VALUES ($1, $2, $3) RETURNING *",
-            [userID, p.content, p.title])
-            .then(res => res.rows[0])
-            .catch(null)
+    static async insert(userID: number, p: IPost): Promise<Post> {
+        // note: we don't try/catch this because if connecting throws an exception
+        // we don't need to dispose of the client (it will be undefined)
+        const client = await db.pool.connect()
+        try {
+            await client.query('BEGIN')
+            //Insert new post
+            const postID: number = await client.query("INSERT INTO posts(userid, content, title) VALUES ($1, $2, $3) RETURNING postid",
+                [userID, p.content, p.title]).then(r => r.rows[0].postid);
+            //Insert post tags
+            const tagInsertTasks: Promise<any>[] = []
+            p.tagIDs.forEach(tagID => {
+                tagInsertTasks.push(client.query("INSERT INTO tagsposts(postid, tagid) VALUES ($1,$2)", [postID, tagID]))
+            });
+            await Promise.all(tagInsertTasks);
+            await client.query('COMMIT')
+            let result: Post = new Post(postID);
+            result.content = p.content;
+            result.tagIDs = p.tagIDs;
+            result.title = p.title
+            return result;
+        } catch (e) {
+            await client.query('ROLLBACK')
+            throw e
+        } finally {
+            client.release()
+        }
     }
 
-    static async update(p: Post): Promise<Post | null> {
+    static async update(p: IPost): Promise<Post | null> {
         return db.query("UPDATE posts SET content=$1, title=$2 WHERE id = $3 RETURNING *", [p.content, p.title, p.id])
             .then(res => res.rows[0])
             .catch(null)
     }
 
     static async remove(postID: number) {
-        db.query("DELETE FROM posts WHERE postID = $1", [postID]).catch(null);
+        db.query("DELETE FROM posts WHERE postID = $1", [postID])
     }
 
 
@@ -47,7 +70,6 @@ export class Post implements IPost {
     }
 
     static getPostRange = async (startingIndex: number = 0, limit: number = 10): Promise<Post[]> => {
-
         return db.query("SELECT * FROM posts LIMIT $2 OFFSET $1", [startingIndex, limit])
             .then(res => res.rows)
             .catch(null);

@@ -24,7 +24,7 @@ router.patch('/:username/*', AuthMiddleware.verifyUserOnTokenPayload);
 
 
 //Get any, one post or collection of posts
-router.get("/", controller.getPostsForUser)
+router.get("/", controller.findPosts)
 
 //Get posts from a user
 router.get("/:username", controller.getPostsForUser);
