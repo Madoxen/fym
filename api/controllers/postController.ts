@@ -19,7 +19,7 @@ class PostController {
             if (id === undefined)
                 return res.status(404).send({ error: "username not found" })
 
-            Post.insert(id, req.body);
+            await Post.insert(id, req.body);
         }
         catch
         {
@@ -40,10 +40,10 @@ class PostController {
         return res.status(200).send();
     }
 
-    updatePost = (req: Request<{ username: string, postid: number }, IPost>, res: Response) => {
+    updatePost = async (req: Request<{ username: string, postid: number }, IPost>, res: Response) => {
         try {
-            let p: IPost = { id: req.params.postid, content: req.body.content, title: req.body.title, tagIDs: req.body.tags };
-            Post.update(p);
+            let p: IPost = { id: req.params.postid, content: req.body.content, title: req.body.title, tagIDs: req.body.tagIDs };
+            await Post.update(p);
         }
         catch
         {

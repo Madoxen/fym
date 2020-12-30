@@ -53,9 +53,37 @@ export class Post implements IPost {
     }
 
     static async update(p: IPost): Promise<Post | null> {
-        return db.query("UPDATE posts SET content=$1, title=$2 WHERE id = $3 RETURNING *", [p.content, p.title, p.id])
-            .then(res => res.rows[0])
-            .catch(null)
+
+        if (p.id === undefined)
+            return null;
+
+        const client = await db.pool.connect();
+        try {
+            await client.query('BEGIN')
+            //Insert new post
+            await client.query("UPDATE posts SET content=$1, title=$2 WHERE postid = $3 RETURNING *",
+                [p.content, p.title, p.id]);
+            //Delete all post tags
+            await client.query("DELETE FROM tagsposts WHERE postid=$1", [p.id])
+            //Insert post tags
+            const tagInsertTasks: Promise<any>[] = []
+            p.tagIDs.forEach(tagID => {
+                tagInsertTasks.push(client.query("INSERT INTO tagsposts(postid, tagid) VALUES ($1,$2)", [p.id, tagID]))
+            });
+            await Promise.all(tagInsertTasks);
+            await client.query('COMMIT')
+            let result: Post = new Post(p.id);
+            result.content = p.content;
+            result.tagIDs = p.tagIDs;
+            result.title = p.title
+            return result;
+        } catch (e) {
+            await client.query('ROLLBACK')
+            console.log(e);
+            throw e
+        } finally {
+            client.release()
+        }
     }
 
     static async remove(postID: number) {
