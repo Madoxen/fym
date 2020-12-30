@@ -19,13 +19,14 @@ class PostController {
             if (id === undefined)
                 return res.status(404).send({ error: "username not found" })
 
-            await Post.insert(id, req.body);
+            
+            return res.status(200).json(await Post.insert(id, req.body));
         }
         catch
         {
             return res.status(500).send({ error: "Could not insert a new document" })
         }
-        return res.status(200).send();
+        
     }
 
     deletePost = async (req: Request<{ postid: number }>, res: Response) => {
