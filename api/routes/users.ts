@@ -15,7 +15,7 @@ router.get('/', controller.getUsers)
 
 //gets userDetails
 //Everyone can see any profile details 
-router.get('/:username', controller.getUsers);
+router.get('/:username', controller.getUser);
 
 
 //Change user details

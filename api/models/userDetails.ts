@@ -1,55 +1,56 @@
-import { Collection, Cursor } from "mongodb";
 import { start } from "repl";
-import getDb from "../db";
+import db from "../db";
+import { Post } from "./post";
 
 
 //Class containing user details, such as profile description, visible name, contact info etc. (non confidential data that can be sent outside)
 //and CRUD methods
-class UserDetails {
 
-    readonly username: string = ""; //Used a bit like FK
+export interface IUserDetails {
+
+    readonly id?: number; //Unique
+    profileDescription?: string;
+    telephone?: string;
+    contactEmail?: string;
+}
+
+
+class UserDetails implements IUserDetails {
+    readonly id: number; //Unique
     profileDescription: string = "";
-    visibleName: string = "";
     telephone: string = "";
     contactEmail: string = "";
 
     //We need to provide associated username for UserDetails
     constructor(username: string) {
-        this.username = username;
+        this.id = 0
     }
 
-    private static userDetailsCollection: Collection<any>;
-
     //Push user object into database, and return id
-    static async create(usr: UserDetails) {
-        UserDetails.getUserCollection().then(collection => collection.insertOne(usr));
+    static async insert(usr: IUserDetails, account_id: number): Promise<UserDetails | null> {
+        return db.query("INSERT INTO userDetails (accountid, profiledescription, phone, email) VALUES ($1,$2,$3,$4) RETURNING *",
+            [account_id, usr.profileDescription, usr.telephone, usr.contactEmail])
+            .then(res => res.rows[0])
+            .catch(null);
     }
 
     //Update user object that has the same ID 
-    static async update(usr: UserDetails) {
-        (await UserDetails.getUserCollection()).updateOne({ username: usr.username }, {$set: usr})
+    static async update(usr: IUserDetails): Promise<UserDetails | null> {
+        return db.query("UPDATE userDetails SET profileDescription=$1, phone=$2, email=$3 WHERE userID=$4 RETURNING *",
+            [usr.profileDescription, usr.telephone, usr.contactEmail, usr.id])
+            .then(res => res.rows[0])
+            .catch(null);
     }
 
-    static async remove(username: string) {
-        (await UserDetails.getUserCollection()).deleteOne({ username: username });
+    static getUserDetails = async (id: number): Promise<IUserDetails | null> => {
+        return db.query("SELECT * FROM userDetails WHERE userid = $1", [id]).then(res => res.rows[0]).catch(null);
     }
 
-    static async getUserCollection(): Promise<Collection<UserDetails>> {
-        if (UserDetails.userDetailsCollection === undefined)
-            UserDetails.userDetailsCollection = (await getDb()).collection('userDetails');
-        return UserDetails.userDetailsCollection;
+    static getUserDetailsRange = async (startingIndex: number, limit: number): Promise<IUserDetails[]> => {
+        return db.query("SELECT * FROM userDetails LIMIT $2 OFFSET $1", [startingIndex, limit])
+            .then(res => res.rows)
+            .catch(null);
     }
-
-    static getUserDetails = async (username: string): Promise<UserDetails | null> => {
-        let coll = UserDetails.getUserCollection();
-        return (await coll).findOne({ username: username });
-    }
-
-    static getUserDetailsRange = async (startingIndex: number, limit: number): Promise<UserDetails[] | null> => {
-        let coll = UserDetails.getUserCollection();
-        return (await coll).find().skip(startingIndex).limit(limit).toArray();
-    }
-
 }
 
 export default UserDetails;

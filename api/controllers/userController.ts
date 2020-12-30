@@ -1,41 +1,44 @@
 import { NextFunction, Request, Response } from 'express';
+import db from '../db';
 import UserAccount from '../models/userAccount'
-import UserDetails from '../models/userDetails';
+import UserDetails, { IUserDetails } from '../models/userDetails';
+
+interface getUsersRequestQuery {
+    start: number;
+    limit: number;
+}
+
 
 class UserController {
 
-    getUsers = async (req: Request, res: Response) => {
-
+    getUser = async (req: Request<{ username: string }>, res: Response) => {
         if (req.params.username !== undefined) {
 
-            let details = await UserDetails.getUserDetails(req.params.username);
-
-            if (details === null)
+            let acc = await (await db.query("SELECT id FROM auth WHERE username=$1", [req.params.username])).rows[0]
+            if (acc === undefined || acc === null)
                 return res.status(404).send({ error: "Username not found" })
+            let details = await UserDetails.getUserDetails(acc.id);
             return res.status(200).json(details);
         }
         else {
-            res.status(404).send();
+            return res.status(404).send();
         }
     }
 
-    updateUserProfile = async (req: Request, res: Response) => {
-        if (req.params.username === undefined) {
-            return res.status(400).send({ error: "username undefined" });
-        }
+    getUsers = async (req: Request<{}, {}, {}, getUsersRequestQuery>, res: Response<IUserDetails[]>) => {
+        let details = await UserDetails.getUserDetailsRange(req.query.start, req.query.limit);
+        if (details !== null)
+            return res.status(200).json(details);
+        return res.status(404).send();
+    }
 
-        if (!this.isDetails(req.body)) {
-            return res.status(409).send({ error: "Provided information is not of the type UserDetails" });
-        }
 
-        let newDetails = new UserDetails(req.params.username);
-        newDetails.profileDescription = req.body.profileDescription;
-        newDetails.visibleName = req.body.visibleName;
-        newDetails.telephone = req.body.telephone;
-        newDetails.contactEmail = req.body.contactEmail;
-
+    updateUserProfile = async (req: Request<{ username: string }, {}, IUserDetails>, res: Response) => {
         try {
-            UserDetails.update(newDetails);
+            let acc = await (await db.query("SELECT id FROM auth WHERE username=$1", [req.params.username])).rows[0]
+            if (acc === undefined || acc === null)
+                return res.status(404).send({ error: "Username not found" })
+            await UserDetails.update({ ...req.body, id: acc.id });
             return res.status(200).send();
         }
         catch
@@ -43,16 +46,6 @@ class UserController {
             return res.status(500).send();
         }
     }
-
-
-    private isDetails(obj: any) {
-        return typeof (obj.username) === "string" &&
-            typeof (obj.profileDescription) === "string" &&
-            typeof (obj.visibleName) === "string" &&
-            typeof (obj.telephone) === "string" &&
-            typeof (obj.contactEmail) === "string";
-    }
-
 }
 
 
