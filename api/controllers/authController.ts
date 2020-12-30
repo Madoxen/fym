@@ -7,6 +7,7 @@ import UserDetails from '../models/userDetails';
 import db from '../db';
 
 
+
 const JWT_ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_TOKEN_SECRET;
 const JWT_REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_TOKEN_SECRET;
 const JWT_ACCESS_TOKEN_TTL = process.env.JWT_ACCESS_TOKEN_TTL;
@@ -21,15 +22,6 @@ class AuthController {
       }
 
       registerNewUser = async (req: Request, res: Response) => {
-
-            if (req.body.password === undefined)
-                  return res.status(400).send("Missing password");
-
-            if (req.body.username === undefined)
-                  return res.status(400).send("Missing username");
-
-            if (req.body.email === undefined)
-                  return res.status(400).send("Missing email");
 
             //Hash password
             const salt = await bcrypt.genSalt(10);
@@ -88,13 +80,6 @@ class AuthController {
 
       //Check credentials and send access token
       login = async (req: Request, res: Response) => {
-            if (!req.body.username)
-                  return res.status(400).send("Username missing");
-
-            if (!req.body.password)
-                  return res.status(400).send("Password missing");
-
-
             try {
                   //First find user in db
                   let u = await (await db.query("SELECT * FROM auth WHERE username=$1", [req.body.username])).rows[0]

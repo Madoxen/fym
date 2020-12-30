@@ -24,23 +24,6 @@ class PostController {
     }
 
     createPost = async (req: Request<{ username: string }, IPost>, res: Response) => {
-
-        if (req.body.content === undefined)
-            return res.status(400).send("content field not found");
-        if (req.body.title === undefined)
-            return res.status(400).send("title field not found");
-        if (req.body.tagIDs === undefined)
-            return res.status(400).send("tagIDs field not found");
-
-        if (typeof(req.body.content) !== "string")
-            return res.status(400).send("content not a string");
-        if (typeof(req.body.title) !== "string")
-            return res.status(400).send("title not a string");
-        if (typeof(req.body.tagIDs) !== "object")
-            return res.status(400).send("tagIDs not of object type");
-
-
-
         try {
             let id = await UserAccount.getAccFromUsername(req.params.username).then(x => x?.id);
             if (id === undefined)
@@ -57,7 +40,6 @@ class PostController {
     }
 
     deletePost = async (req: Request<{ postid: number }>, res: Response) => {
-
         try {
             await Post.remove(req.params.postid);
         }
@@ -69,25 +51,6 @@ class PostController {
     }
 
     updatePost = async (req: Request<{ username: string, postid: number }, IPost>, res: Response) => {
-
-        if (req.params.postid === undefined)
-            return res.status(400).send("postid parameter not found");
-        if (req.body.content === undefined)
-            return res.status(400).send("content field not found");
-        if (req.body.title === undefined)
-            return res.status(400).send("title field not found");
-        if (req.body.tagIDs === undefined)
-            return res.status(400).send("tagIDs field not found");
-
-        if (typeof(req.body.content) !== "string")
-            return res.status(400).send("content not a string");
-        if (typeof(req.body.title) !== "string")
-            return res.status(400).send("title not a string");
-        if (typeof(req.body.tagIDs) !== "object")
-            return res.status(400).send("tagIDs not of object type");
-
-
-
         try {
             let p: IPost = { id: req.params.postid, content: req.body.content, title: req.body.title, tagIDs: req.body.tagIDs };
             await Post.update(p);
