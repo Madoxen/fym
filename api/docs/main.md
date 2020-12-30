@@ -4,6 +4,20 @@
     
 ## Available endpoints
 
+#### ```POST /auth/register```
+#### ```POST /auth/login```
+#### ```POST /auth/refresh```
+#### ```POST /auth/refresh```
+#### ```GET /users/```
+#### ```GET /users/:username```
+#### ```POST /users/:username```
+#### ```GET /posts```
+#### ```GET /posts/:username```
+#### ```POST /posts/:username```
+#### ```PATCH /posts/:username/:postid```
+#### ```DELETE /posts/:username/:postid```
+
+
 ---
 
 ### Auth
@@ -172,7 +186,7 @@ Body: "Secret missing"
 
 ---
 
-#### ```DELETE /auth/refresh```
+#### ```POST /auth/refresh```
 Removes user account and all associated data from database
 Access token must be provided via *Authorization* header.
 
@@ -310,11 +324,29 @@ Requirements:
 Status: 200 OK
 ```
 
+The request is missing Authorization header
 ```HTTP
-Status: 404 Not Found
-Body: Username not found
+Status: 401 Unauthorized
+Body: Auth header missing
 ```
 
+Missing *Bearer* in Authorization header will result in 400
+```HTTP
+Status: 401 Unauthorized
+Body: Missing bearer
+```
+
+Token is either expired or failed to be recoginized as valid
+```HTTP
+Status: 401 Unauthorized
+Body: "Access token is invalid"
+```
+
+Username attached to this token does not match username in parameter
+```HTTP
+Status: 401 Unauthorized
+Body: "This user is not authorized for resource of :username"
+```
 
 Server failed to push into database 
 ```HTTP
@@ -352,7 +384,7 @@ Output:
     },
     {
         "postid": 14,
-        "userid": 3,
+        "userid": 1,
         "content": "Yes this is another post like that :D",
         "title": "Anotha one",
         "tagids": [
@@ -361,7 +393,7 @@ Output:
     },
     {
         "postid": 15,
-        "userid": 3,
+        "userid": 2,
         "content": "Yes this is another post like that :D",
         "title": "Anotha one",
         "tagids": [
@@ -391,16 +423,255 @@ Status: 500 Internal Server Error
 
 #### ```GET /posts/:username```
 
+
+Returns any posts or post belonging to a given username
+
+#### Query Parameters
+
+1. **start** - Integer - PLANNED - starting index of query - Default: 0
+2. **limit** - Integer - PLANNED - how many objects should be retrived - Default: 10
+
+
+#### Responses
+
+Should always return 200. If none were found it will send
+empty json array []
+```HTTP
+Status: 200 OK
+```
+
+Body:
+```JSON
+[
+   {
+        "postid": 15,
+        "userid": 2,
+        "content": "Yes this is another post like that :D",
+        "title": "Anotha one",
+        "tagids": [
+            1,
+            2
+        ]
+    }
+]
+```
+
+
+This only happens when exception wont be caught (so should not)
+```HTTP
+Status: 500 Internal Server Error
+```
+
 ---
 
 #### ```POST /posts/:username```
 
+
+#### Responses:
+```HTTP
+Status: 200 OK
+```
+```JSON
+body: {
+    "content": "Yes this is another post like that :D",
+    "title": "Anotha one",
+    "tagIDs": [
+        1,
+        2
+    ],
+    "id": 18
+}
+```
+
+```HTTP
+Status: 400 Bad Request
+Body: content field not found
+```
+
+```HTTP
+Status: 400 Bad Request
+Body: title field not found
+```
+
+```HTTP
+Status: 400 Bad Request
+Body: tagIds field not found
+```
+
+
+```HTTP
+Status: 400 Bad Request
+Body: content not a string
+```
+
+```HTTP
+Status: 400 Bad Request
+Body: title not a string
+```
+
+```HTTP
+Status: 400 Bad Request
+Body: tagIds not of object type
+```
+
+
+The request is missing Authorization header
+```HTTP
+Status: 401 Unauthorized
+Body: Auth header missing
+```
+
+Missing *Bearer* in Authorization header will result in 400
+```HTTP
+Status: 401 Unauthorized
+Body: Missing bearer
+```
+
+Token is either expired or failed to be recoginized as valid
+```HTTP
+Status: 401 Unauthorized
+Body: "Access token is invalid"
+```
+
+Username attached to this token does not match username in parameter
+```HTTP
+Status: 401 Unauthorized
+Body: "This user is not authorized for resource of :username"
+```
+
+
+
+
 ---
 
 #### ```PATCH /posts/:username/:postid```
+Replaces post information with new given information
+
+Requirements:
+- Refresh token must be provided via *Authorization* header.
+
+- New information **must** be provided via JSON body, with following structure:
+
+```JSON
+{
+    "content": "New post? UWU?",
+    "title": "Changed post XD",
+    "tagIDs": [1]
+}
+```
+
+
+#### Responses:
+```HTTP
+Status: 200 OK
+```
+```JSON
+body: {
+    "content": "Yes this is another post like that :D",
+    "title": "Anotha one",
+    "tagIDs": [
+        1,
+        2
+    ],
+    "id": 18
+}
+```
+
+```HTTP
+Status: 400 Bad Request
+Body: content field not found
+```
+
+```HTTP
+Status: 400 Bad Request
+Body: title field not found
+```
+
+```HTTP
+Status: 400 Bad Request
+Body: tagIds field not found
+```
+
+
+```HTTP
+Status: 400 Bad Request
+Body: content not a string
+```
+
+```HTTP
+Status: 400 Bad Request
+Body: title not a string
+```
+
+```HTTP
+Status: 400 Bad Request
+Body: tagIds not of object type
+```
+
+The request is missing Authorization header
+```HTTP
+Status: 401 Unauthorized
+Body: Auth header missing
+```
+
+Missing *Bearer* in Authorization header will result in 400
+```HTTP
+Status: 401 Unauthorized
+Body: Missing bearer
+```
+
+Token is either expired or failed to be recoginized as valid
+```HTTP
+Status: 401 Unauthorized
+Body: "Access token is invalid"
+```
+
+Username attached to this token does not match username in parameter
+```HTTP
+Status: 401 Unauthorized
+Body: "This user is not authorized for resource of :username"
+```
 
 ---
 
 #### ```DELETE /posts/:username/:postid```
+Deletes given user post
 
+Requirements:
+- Refresh token must be provided via *Authorization* header.
+
+
+
+
+
+#### Responses
+
+Resource was successfuly removed 
+```HTTP
+Status: 200 OK
+```
+
+The request is missing Authorization header
+```HTTP
+Status: 401 Unauthorized
+Body: Auth header missing
+```
+
+Missing *Bearer* in Authorization header will result in 400
+```HTTP
+Status: 401 Unauthorized
+Body: Missing bearer
+```
+
+Token is either expired or failed to be recoginized as valid
+```HTTP
+Status: 401 Unauthorized
+Body: "Access token is invalid"
+```
+
+Username attached to this token does not match username in parameter
+```HTTP
+Status: 401 Unauthorized
+Body: "This user is not authorized for resource of :username"
+```
 
