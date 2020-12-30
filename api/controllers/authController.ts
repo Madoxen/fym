@@ -23,13 +23,13 @@ class AuthController {
       registerNewUser = async (req: Request, res: Response) => {
 
             if (req.body.password === undefined)
-                  return res.status(400).send();
+                  return res.status(400).send("Missing password");
 
             if (req.body.username === undefined)
-                  return res.status(400).send();
+                  return res.status(400).send("Missing username");
 
             if (req.body.email === undefined)
-                  return res.status(400).send();
+                  return res.status(400).send("Missing email");
 
             //Hash password
             const salt = await bcrypt.genSalt(10);
@@ -155,6 +155,19 @@ class AuthController {
                   return res.status(500).send("Secret missing");
             }
       }
+
+      deleteUser = async (req: Request, res: Response) => {
+            try {
+                  await db.query("DELETE FROM auth WHERE username=$1", [req.params.username])
+                  res.status(200);
+            }
+            catch
+            {
+                  res.status(500).send("Could not delete user")
+            }
+
+      }
+}
 }
 
 export default AuthController;
