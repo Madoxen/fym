@@ -65,22 +65,12 @@ Status: 409 Conflict
 Body: Account with given email already exists
 ``` 
 
-400 responses are issued when critical fields are missing in the
+400 responses are issued when critical fields are missing or are malformed in the
 request JSON body
 
 ```HTTP
 Status: 400 Bad Request
-Body: Username missing
-``` 
-
-```HTTP
-Status: 400 Bad Request
-Body: Password missing
-``` 
-
-```HTTP
-Status: 400 Bad Request
-Body: Email missing
+Body: errors : []
 ``` 
 
 Server could not push new results to database 
@@ -112,18 +102,13 @@ Body:
 ```
 
 
-400 responses are issued when critical fields are missing in the
+400 responses are issued when critical fields are missing or are malformed in the
 request JSON body
 
 ```HTTP
 Status: 400 Bad Request
-Body: Username missing
-```
-
-```HTTP
-Status: 400 Bad Request
-Body: Password missing
-```
+Body: errors : []
+``` 
 
 ```HTTP
 Status: 401 Unauthorized
@@ -202,7 +187,7 @@ Status: 401 Unauthorized
 Body: Auth header missing
 ```
 
-Missing *Bearer* in Authorization header will result in 400
+Missing *Bearer* in Authorization header will result in 401
 ```HTTP
 Status: 401 Unauthorized
 Body: Missing bearer
@@ -481,38 +466,16 @@ body: {
     ],
     "id": 18
 }
+
+
 ```
+400 responses are issued when critical fields are missing or are malformed in the
+request JSON body
 
 ```HTTP
 Status: 400 Bad Request
-Body: content field not found
-```
-
-```HTTP
-Status: 400 Bad Request
-Body: title field not found
-```
-
-```HTTP
-Status: 400 Bad Request
-Body: tagIds field not found
-```
-
-
-```HTTP
-Status: 400 Bad Request
-Body: content not a string
-```
-
-```HTTP
-Status: 400 Bad Request
-Body: title not a string
-```
-
-```HTTP
-Status: 400 Bad Request
-Body: tagIds not of object type
-```
+Body: errors : []
+``` 
 
 
 The request is missing Authorization header
@@ -577,36 +540,13 @@ body: {
 }
 ```
 
-```HTTP
-Status: 400 Bad Request
-Body: content field not found
-```
+400 responses are issued when critical fields are missing or are malformed in the
+request JSON body
 
 ```HTTP
 Status: 400 Bad Request
-Body: title field not found
-```
-
-```HTTP
-Status: 400 Bad Request
-Body: tagIds field not found
-```
-
-
-```HTTP
-Status: 400 Bad Request
-Body: content not a string
-```
-
-```HTTP
-Status: 400 Bad Request
-Body: title not a string
-```
-
-```HTTP
-Status: 400 Bad Request
-Body: tagIds not of object type
-```
+Body: errors : []
+``` 
 
 The request is missing Authorization header
 ```HTTP
@@ -639,9 +579,6 @@ Deletes given user post
 
 Requirements:
 - Refresh token must be provided via *Authorization* header.
-
-
-
 
 
 #### Responses

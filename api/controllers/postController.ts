@@ -27,7 +27,7 @@ class PostController {
         try {
             let id = await UserAccount.getAccFromUsername(req.params.username).then(x => x?.id);
             if (id === undefined)
-                return res.status(404).send("username not found" )
+                return res.status(404).send("username not found")
 
 
             return res.status(200).json(await Post.insert(id, req.body));
