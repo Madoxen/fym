@@ -16,7 +16,7 @@
 #### ```POST /posts/:username```
 #### ```PATCH /posts/:username/:postid```
 #### ```DELETE /posts/:username/:postid```
-
+#### ```GET /tags```
 
 ---
 
@@ -612,3 +612,29 @@ Status: 401 Unauthorized
 Body: "This user is not authorized for resource of :username"
 ```
 
+#### ```GET /tags```
+Returns all available tags from the database
+
+
+
+#### Responses
+```HTTP
+Status: 200 OK
+```
+Body:
+```JSON
+[
+    {
+        "tagid": 1,
+        "name": "Programista"
+    },
+    {
+        "tagid": 2,
+        "name": "Grafik"
+    }
+]
+```
+
+```HTTP
+Status: 500 Internal Server Error
+```
