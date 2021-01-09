@@ -1,7 +1,10 @@
 import React from 'react'
+import { ITags } from '../props/Interfaces'
 import Post from './Post'
+import TagPanel from '../tags/TagPanel'
 
 const PostBoard: React.FC = () => {
+
 
     const posts = [
         {
@@ -59,9 +62,16 @@ const PostBoard: React.FC = () => {
             "email": "cat@cat.org"
         }
     ]
-    
+    const getActiveTags: Function = (tags: ITags[]): void=> {
+
+        console.log(tags);
+    }
+
+
+
     return(
         <div>
+            <TagPanel tags={tags} updateTags={getActiveTags}/>
             <Post post={posts[0]} tags={tags} users={users}/>
             <Post post={posts[1]} tags={tags} users={users}/>
             <Post post={posts[2]} tags={tags} users={users}/>

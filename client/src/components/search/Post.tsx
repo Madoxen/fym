@@ -1,24 +1,8 @@
 import React from 'react'
 import { Card } from 'react-bootstrap'
+import { IPost,ITags,IUser } from '../props/Interfaces'
 
-interface IPost {
-    postid: number;
-    userid: number;
-    content: string;
-    title: string;
-    tagids: number[];
-}
-interface ITags {
-    tagid: number;
-    name: string;
-}
-interface IUser{
-    userid: number;
-    accountid: number;
-    profiledescription: string;
-    phone: string;
-    email: string;
-}
+
 interface Props {
     post: IPost;
     tags: ITags[];
@@ -30,7 +14,6 @@ const Post: React.FC<Props> = ({post,tags,users}) => {
 
     const postTags: Function = (): JSX.Element[] => 
     {
-        debugger;
         let tagArray:JSX.Element[] = [];
         post.tagids.forEach(tagId => tagArray.push(
             <span key={tagId}> {tagOfId(tagId)} </span>
