@@ -46,8 +46,9 @@ class UserDetails implements IUserDetails {
         return db.query("SELECT * FROM userDetails WHERE userid = $1", [id]).then(res => res.rows[0]).catch(null);
     }
 
-    static getUserDetailsRange = async (startingIndex: number, limit: number): Promise<IUserDetails[]> => {
-        return db.query("SELECT * FROM userDetails LIMIT $2 OFFSET $1", [startingIndex, limit])
+    static getUserDetailsRange = async (startingIndex: number, limit: number): Promise<any> => {
+        return db.query(`SELECT auth.username, ud.profiledescription, ud.phone, ud.email FROM userdetails ud
+        INNER JOIN auth ON auth.id = ud.accountid LIMIT $2 OFFSET $1`, [startingIndex, limit])
             .then(res => res.rows)
             .catch(null);
     }
