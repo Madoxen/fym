@@ -12,14 +12,10 @@ interface Props{
 const PostBoard: React.FC<Props> = ({users,tags,posts}) => {
 
 
-    const getActiveTags: Function = (tags: ITags[]): void=> {
 
-        console.log(tags);
-    }
 
     return(
         <div>
-            <TagPanel tags={tags} updateTags={getActiveTags}/>
             <Post post={posts[0]} tags={tags} users={users}/>
             <Post post={posts[1]} tags={tags} users={users}/>
             <Post post={posts[2]} tags={tags} users={users}/>
