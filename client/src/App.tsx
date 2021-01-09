@@ -3,7 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { Navigation } from './components/Navigation'
 import { About } from './pages/About'
 import { Home } from './pages/Home'
-import { Profile } from './pages/Profie'
+import { Profile } from './pages/Profile'
 import { Register } from './pages/Register'
 
 const App: React.FC = () => {

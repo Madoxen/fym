@@ -25,6 +25,12 @@ export const Navigation: React.FC = () => (
           Register
         </Link>{' '}
       </NavItem>
+      <NavItem>
+        {' '}
+        <Link className="nav-link" to="/profile">
+          Profile
+        </Link>{' '}
+      </NavItem>
     </Nav>
   </Navbar>
 )

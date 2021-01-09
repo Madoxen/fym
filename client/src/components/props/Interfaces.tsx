@@ -14,10 +14,17 @@ export interface ITagBox {
     name: string;
     active: boolean;
 }
-export interface IUser{
+export interface IUser {
     userid: number;
     accountid: number;
     profiledescription: string;
     phone: string;
     email: string;
+}
+export interface IUserPOST {
+    profileDescription: string,
+    visibleName: string,
+    telephone: string,
+    contactEmail: string,
+    tagIDs: number[]
 }
