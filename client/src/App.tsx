@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { Navigation } from './components/Navigation'
 import { About } from './pages/About'
 import { Home } from './pages/Home'
+import { Profile } from './pages/Profie'
 import { Register } from './pages/Register'
 
 const App: React.FC = () => {
@@ -14,6 +15,7 @@ const App: React.FC = () => {
           <Route path="/" component={Home} exact />
           <Route path="/about" component={About} />
           <Route path="/register" component={Register} />
+          <Route path="/profile" component={Profile} />
         </Switch>
       </div>
     </BrowserRouter>
