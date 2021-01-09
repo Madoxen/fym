@@ -76,7 +76,6 @@ class PostController {
             INNER JOIN userDetails ON userDetails.userid = posts.userid
             INNER JOIN auth ON auth.id = userDetails.accountid
             WHERE tagsposts.postid = ANY(SELECT DISTINCT postid FROM tagsposts WHERE tagid = ANY ($1)) GROUP BY tagsposts.postid, posts.content, posts.title, auth.username;`, [queryTags]).then(res => res.rows);
-
             return res.status(200).json(result);
         }
         catch (e) {
@@ -92,7 +91,6 @@ class PostController {
             INNER JOIN userDetails ON userDetails.userid = posts.userid
             INNER JOIN auth ON auth.id = userDetails.accountid
             WHERE auth.username = $1 GROUP BY tagsposts.postid, posts.content, posts.title, auth.username;`, [req.params.username]).then(res => res.rows);
-
             return res.status(200).json(result);
         }
         catch (e) {

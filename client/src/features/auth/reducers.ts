@@ -17,24 +17,6 @@ let refreshTimeoutID: NodeJS.Timeout | null = null;
 
 function silentRefresh() {
 
-   /* const dispatch = useDispatch()
-    const refToken = useSelector(getRefreshToken)
-
-    fetch(process.env.API_URL + "/auth/refresh", {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-type': 'application/json; charset=UTF-8',
-            Authorization: `Bearer  + ${refToken}`
-        },
-    })
-        .then((r) => r.json())
-        .then((r) =>
-            dispatch({
-                type: REPLACE_TOKENS,
-                tokens: { accessToken: r.acc, refreshToken: r.ref },
-            })
-        )*/
 }
 
 

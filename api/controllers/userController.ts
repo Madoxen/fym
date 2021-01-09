@@ -13,7 +13,6 @@ class UserController {
 
     getUser = async (req: Request<{ username: string }>, res: Response) => {
         if (req.params.username !== undefined) {
-
             let result = await (await db.query(`SELECT auth.username, ud.profiledescription, ud.phone, ud.email FROM userdetails ud
             INNER JOIN auth ON auth.id = ud.accountid WHERE auth.username=$1 LIMIT 1`, [req.params.username])).rows[0]
             if (result === undefined || result === null)
