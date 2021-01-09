@@ -33,3 +33,7 @@ export interface IPostPOST {
     title: string,
     tagids: number[]
 }
+export interface ILoginPOST {
+    username: string,
+    password: string
+}

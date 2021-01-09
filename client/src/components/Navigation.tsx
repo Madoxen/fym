@@ -37,6 +37,12 @@ export const Navigation: React.FC = () => (
           AddPost
         </Link>{' '}
       </NavItem>
+      <NavItem>
+        {' '}
+        <Link className="nav-link" to="/login">
+          Login
+        </Link>{' '}
+      </NavItem>
     </Nav>
   </Navbar>
 )

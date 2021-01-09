@@ -6,6 +6,7 @@ import { Home } from './pages/Home'
 import { Profile } from './pages/Profile'
 import { Register } from './pages/Register'
 import { AddPost } from './pages/AddPost'
+import { Login } from './pages/Login'
 
 const App: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const App: React.FC = () => {
           <Route path="/register" component={Register} />
           <Route path="/profile" component={Profile} />
           <Route path="/addPost" component={AddPost} />
+          <Route path="/login" component={Login} />
         </Switch>
       </div>
     </BrowserRouter>
