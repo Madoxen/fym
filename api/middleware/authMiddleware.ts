@@ -1,20 +1,12 @@
-import bcrypt from 'bcrypt'
 import { Request, Response, NextFunction } from 'express';
-import createError from 'http-errors';
-import UserAccount from '../models/userAccount';
-import jwt, { JsonWebTokenError } from 'jsonwebtoken';
-import { exception } from 'console';
-import { ObjectId } from 'mongodb';
-import { ReplOptions } from 'repl';
-import AuthController from '../controllers/authController';
+import jwt from 'jsonwebtoken';
+import db from '../db';
 
 //Auth middleware that you can plug in to check incoming JWT tokens
-
 const JWT_ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_TOKEN_SECRET;
 const JWT_REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_TOKEN_SECRET;
 const JWT_ACCESS_TOKEN_TTL = process.env.JWT_ACCESS_TOKEN_TTL;
 const JWT_REFRESH_TOKEN_TTL = process.env.JWT_REFRESH_TOKEN_TTL;
-
 
 class AuthMiddleware {
 
@@ -28,20 +20,21 @@ class AuthMiddleware {
         // Verify refreshToken 
         if (JWT_ACCESS_TOKEN_SECRET !== undefined && JWT_ACCESS_TOKEN_SECRET !== null) {
             if (!token) {
-                return res.status(401).send({
-                    message: "Auth header missing"
-                })
+                return res.status(401).send(
+                    "Auth header missing"
+                )
             }
-
+            
+            //TODO: require bBearer
             if (token.startsWith("Bearer ")) {
                 token = token.slice(7, token.length).trimLeft();
             }
 
             jwt.verify(token, JWT_ACCESS_TOKEN_SECRET, async (err: any, payload: any) => {
                 if (err) {
-                    return res.status(401).send({
-                        error: "Access token is invalid"
-                    });
+                    return res.status(401).send(
+                        "Access token is invalid"
+                    );
                 }
                 res.locals.tokenPayload = payload;
                 return next(); //handoff control to next middleware
@@ -58,18 +51,17 @@ class AuthMiddleware {
 
         //Check if user in token matches the user in the request url
         if (req.params.username !== payload.sub) {
-            return res.status(401).send(); //if not this user is not authorized
+            return res.status(401).send("This user is not authorized for resource of " + req.params.username); //if not this user is not authorized
         }
 
         //Check if such username exists
-        let user = await UserAccount.getUserCollection().then(r => r.findOne({ username: payload.sub }));
+        let user = await (await db.query("SELECT * FROM auth WHERE username=$1", [payload.sub])).rows[0];
 
         if (user === undefined || user === null)
-            return res.status(401).send(); //user does not exist, 401 unauthorized
+            return res.status(404).send("User not found"); //user does not exist, 404 Not found
 
         return next(); //if everythings OK, go to next middleware
     }
 }
-
 
 export default AuthMiddleware;
