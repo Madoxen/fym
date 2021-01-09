@@ -8,6 +8,7 @@ import { Button, ButtonGroup } from 'react-bootstrap';
 const Board: React.FC = () => {
 
     const [searchMode, setSearchMode] = useState<boolean>(true);
+    const [activeTags, setActiveTags] = useState<ITags[]>([]);
 
     const posts = [
         {
@@ -65,11 +66,18 @@ const Board: React.FC = () => {
             "phone": "222 553 876",
             "email": "cat@cat.org",
             "tagids": [1,2]
+        },
+        {
+            "userid": 1,
+            "accountid": 1,
+            "profiledescription": "Miow",
+            "phone": "232 123 876",
+            "email": "bot@bot.org",
+            "tagids": [1]
         }
     ]
     const getActiveTags: Function = (tags: ITags[]): void=> {
-
-        console.log(tags);
+        setActiveTags(tags);
     }
     
     return(
@@ -82,7 +90,7 @@ const Board: React.FC = () => {
             {
             searchMode 
             ? <PostBoard users={users} tags={tags} posts={posts}/> 
-            : <UserBoard users={users} tags={tags} />
+            : <UserBoard users={users} tags={tags} filtr={activeTags}/>
             }
             
             
