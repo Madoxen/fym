@@ -28,3 +28,8 @@ export interface IUserPOST {
     contactEmail: string,
     tagIDs: number[]
 }
+export interface IPostPOST {
+    content: string,
+    title: string,
+    tagids: number[]
+}

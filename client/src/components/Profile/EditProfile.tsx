@@ -17,6 +17,7 @@ const EditProfile: React.FC<Props> = ({ user, tags }) => {
         tagIDs: []
     }
 
+    //TODO SEND User :)
     const SendChanges = (): void => {
         console.log(UserPOST)
     }

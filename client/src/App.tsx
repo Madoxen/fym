@@ -5,6 +5,7 @@ import { About } from './pages/About'
 import { Home } from './pages/Home'
 import { Profile } from './pages/Profile'
 import { Register } from './pages/Register'
+import { AddPost } from './pages/AddPost'
 
 const App: React.FC = () => {
   return (
@@ -16,6 +17,7 @@ const App: React.FC = () => {
           <Route path="/about" component={About} />
           <Route path="/register" component={Register} />
           <Route path="/profile" component={Profile} />
+          <Route path="/addPost" component={AddPost} />
         </Switch>
       </div>
     </BrowserRouter>
