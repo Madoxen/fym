@@ -52,14 +52,16 @@ const PostBoard: React.FC = () => {
             "accountid": 3,
             "profiledescription": "Bark bark",
             "phone": "111 111 111",
-            "email": "Dog@bone.org"
+            "email": "Dog@bone.org",
+            "tagids": [2]
         },
         {
             "userid": 2,
             "accountid": 2,
             "profiledescription": "Woff woff",
             "phone": "222 553 876",
-            "email": "cat@cat.org"
+            "email": "cat@cat.org",
+            "tagids": [1,2]
         }
     ]
     const getActiveTags: Function = (tags: ITags[]): void=> {
