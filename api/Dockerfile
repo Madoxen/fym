@@ -1,5 +1,4 @@
-#this docker file builds API DEVELOPMENT server and then starts it
-
+#this docker file builds production
 # pull official base image
 FROM node:latest
 
@@ -13,11 +12,14 @@ ENV HTTPS FALSE
 # install app dependencies
 COPY package.json ./
 COPY package-lock.json ./
+RUN npm install -g nodemon
 RUN npm install
-RUN npm build
 
 # add app
 COPY . ./
 
+#build typescript
+RUN npm run-script build
+
 # start app
-CMD ["npm", "start"]
+CMD ["npm", "run-script" ,"start"]
