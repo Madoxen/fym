@@ -452,6 +452,23 @@ Status: 500 Internal Server Error
 #### ```POST /posts/:username```
 
 
+Requirements:
+
+Refresh token must be provided via Authorization header.
+
+New information must be provided via JSON body, with following structure:
+
+```JSON
+{
+    "content": "Yes this is another post like that :D",
+    "title": "Anotha one",
+    "tagIDs": [1,2,3]
+}
+```
+
+
+
+
 #### Responses:
 ```HTTP
 Status: 200 OK
