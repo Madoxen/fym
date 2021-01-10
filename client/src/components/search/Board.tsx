@@ -89,7 +89,7 @@ const Board: React.FC = () => {
             </ButtonGroup>
             {
             searchMode 
-            ? <PostBoard users={users} tags={tags} posts={posts}/> 
+            ? <PostBoard users={users} tags={tags} posts={posts} filtr={activeTags}/> 
             : <UserBoard users={users} tags={tags} filtr={activeTags}/>
             }
             
