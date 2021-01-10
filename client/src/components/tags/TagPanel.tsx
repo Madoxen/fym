@@ -5,14 +5,23 @@ import { Button } from 'react-bootstrap';
 interface Props {
     tags: ITags[];
     updateTags: Function;
+    active?: ITags[];
 }
 
-const TagPanel: React.FC<Props> = ({tags,updateTags}) => {
+const TagPanel: React.FC<Props> = ({tags,updateTags,active}) => {
+
+    const isTagActive: Function = (tag: ITags): Boolean =>
+    {
+        if(active === undefined) return false;
+        let isActive = false;
+        active.forEach(activeTag => activeTag.tagid === tag.tagid ? isActive = true : null);
+        return isActive;
+    }
 
     const assignTags: Function = (): ITagBox[] =>
     {
         let tagArr: ITagBox[] = []
-        tags.forEach(tag => tagArr.push({tagid: tag.tagid,name: tag.name,active: false}));
+        tags.forEach(tag => tagArr.push({tagid: tag.tagid,name: tag.name,active: isTagActive(tag)}));
         return tagArr;
     }
     const [tagBoxes, setTagBoxes] = useState<ITagBox[]>(assignTags());
