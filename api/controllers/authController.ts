@@ -148,7 +148,7 @@ class AuthController {
       deleteUser = async (req: Request, res: Response) => {
             try {
                   await db.query("DELETE FROM auth WHERE username=$1", [req.params.username])
-                  return res.status(200);
+                  return res.status(200).send();
             }
             catch
             {

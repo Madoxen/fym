@@ -49,8 +49,11 @@ class UserDetails implements IUserDetails {
     }
 
     static getUserDetailsRange = async (startingIndex: number, limit: number): Promise<any> => {
-        return db.query(`SELECT auth.username, ud.profiledescription, ud.phone, ud.email FROM userdetails ud
-        INNER JOIN auth ON auth.id = ud.accountid LIMIT $2 OFFSET $1`, [startingIndex, limit])
+        return db.query(`SELECT auth.username, ud.profiledescription, ud.phone, ud.email, array_agg(ut.tagid) tagids FROM userdetails ud
+        INNER JOIN auth ON auth.id = ud.accountid
+        LEFT JOIN usertags ut ON ud.userid = ut.userid 
+        GROUP BY auth.username, ud.profiledescription, ud.phone, ud.email
+        LIMIT $2 OFFSET $1`, [startingIndex, limit])
             .then(res => res.rows)
             .catch(null);
     }

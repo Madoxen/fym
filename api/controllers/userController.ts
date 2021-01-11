@@ -7,6 +7,7 @@ import UserDetails, { IUserDetails } from '../models/userDetails';
 interface getUsersRequestQuery {
     start: number;
     limit: number;
+    tagids: number;
 }
 
 
@@ -23,11 +24,15 @@ class UserController {
 
     getUser = async (req: Request<{ username: string }>, res: Response) => {
         if (req.params.username !== undefined) {
-            let result = await (await db.query(`SELECT auth.username, ud.profiledescription, ud.phone, ud.email FROM userdetails ud
-            INNER JOIN auth ON auth.id = ud.accountid WHERE auth.username=$1 LIMIT 1`, [req.params.username])).rows[0]
+            let result = await (await db.query(`SELECT auth.username, ud.profiledescription, ud.phone, ud.email, array_agg(tagid) tagIDs FROM userdetails ud
+            INNER JOIN auth ON auth.id = ud.accountid
+            LEFT JOIN usertags ON ud.userid = usertags.userid
+            WHERE auth.username=$1
+            GROUP BY auth.username, ud.profiledescription, ud.phone, ud.email LIMIT 1`, [req.params.username])).rows[0]
             if (result === undefined || result === null)
                 return res.status(404).send("Username not found" )
-                
+
+
             return res.status(200).json(result);
         }
         else {
