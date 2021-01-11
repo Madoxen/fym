@@ -20,6 +20,7 @@ export interface IUser {
     profiledescription: string;
     phone: string;
     email: string;
+    tagids: number[];
 }
 export interface IUserPOST {
     profileDescription: string,

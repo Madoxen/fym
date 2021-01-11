@@ -238,8 +238,7 @@ Body:
 ```JSON
 [
     {
-        "userid": 3,
-        "accountid": 3,
+        "username" : "dog",
         "profiledescription": "Bark bark",
         "phone": "111 111 111",
         "email": "Dog@bone.org"
@@ -266,8 +265,7 @@ Status: 200 OK
 Body:
 ```JSON
 {
-    "userid": 3,
-    "accountid": 3,
+    "username" : "dog",
     "profiledescription": "Bark bark",
     "phone": "111 111 111",
     "email": "Dog@bone.org"
@@ -297,7 +295,6 @@ Requirements:
 ```JSON
 {
     "profileDescription": "Bark bark",
-    "visibleName": "Bark",
     "telephone": "111 111 111",
     "contactEmail": "Dog@bone.org"
 }
@@ -359,32 +356,23 @@ Output:
 ```JSON
 [
     {
-        "postid": 13,
-        "userid": 3,
-        "content": "Yes this is another post like that :D",
-        "title": "Anotha one",
-        "tagids": [
-            2
-        ]
-    },
-    {
-        "postid": 14,
-        "userid": 1,
-        "content": "Yes this is another post like that :D",
-        "title": "Anotha one",
-        "tagids": [
-            2
-        ]
-    },
-    {
-        "postid": 15,
-        "userid": 2,
-        "content": "Yes this is another post like that :D",
-        "title": "Anotha one",
+        "postid": 23,
         "tagids": [
             1,
             2
-        ]
+        ],
+        "content": "Yes this is another post like that :D",
+        "title": "Anotha one",
+        "username": "dog"
+    },
+    {
+        "postid": 22,
+        "tagids": [
+            2
+        ],
+        "content": "Meow",
+        "title": "miau miau",
+        "username": "cat"
     }
 ]
 ```
@@ -428,15 +416,25 @@ Status: 200 OK
 Body:
 ```JSON
 [
-   {
-        "postid": 15,
-        "userid": 2,
-        "content": "Yes this is another post like that :D",
-        "title": "Anotha one",
+    {
+        "postid": 23,
         "tagids": [
             1,
             2
-        ]
+        ],
+        "content": "Yes this is another post like that :D",
+        "title": "Anotha one",
+        "username": "dog"
+    },
+    {
+        "postid": 22,
+        "tagids": [
+            1,
+            2
+        ],
+        "content": "Yes this is another post like that :D",
+        "title": "Anotha one",
+        "username": "dog"
     }
 ]
 ```

@@ -1,17 +1,27 @@
-import React, { useState } from 'react'
-import { ITagBox, ITags } from '../props/Interfaces'
+import React, {useState} from 'react'
+import { ITagBox,ITags } from '../props/Interfaces'
+import { Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 interface Props {
     tags: ITags[];
     updateTags: Function;
+    active?: ITags[];
 }
 
-const TagPanel: React.FC<Props> = ({ tags, updateTags }) => {
+const TagPanel: React.FC<Props> = ({tags,updateTags,active}) => {
+
+    const isTagActive: Function = (tag: ITags): Boolean =>
+    {
+        if(active === undefined) return false;
+        let isActive = false;
+        active.forEach(activeTag => activeTag.tagid === tag.tagid ? isActive = true : null);
+        return isActive;
+    }
 
     const assignTags: Function = (): ITagBox[] => {
         let tagArr: ITagBox[] = []
-        tags.forEach(tag => tagArr.push({ tagid: tag.tagid, name: tag.name, active: false }));
+        tags.forEach(tag => tagArr.push({tagid: tag.tagid,name: tag.name,active: isTagActive(tag)}));
         return tagArr;
     }
     const [tagBoxes, setTagBoxes] = useState<ITagBox[]>(assignTags());
@@ -20,15 +30,17 @@ const TagPanel: React.FC<Props> = ({ tags, updateTags }) => {
     const boxes: Function = (): JSX.Element[] => {
         let tagBoxArray: JSX.Element[] = [];
         tagBoxes.forEach(tagBox => tagBoxArray.push(
-            <span
+            <Button 
                 className="ml-1 mr-1 p-1 rounded"
                 key={tagBox.tagid}
+                size="sm"
                 onClick={() => tagClick(tagBox.tagid)}
-                style={{ background: tagBox.active ? 'blue' : 'grey', color: 'white' }}
-            >
-                {tagBox.name}
-            </span>
-        ));
+                variant={tagBox.active? 'primary':'scondary'}
+                onMouseDown={(e) => e.preventDefault()}
+            > 
+            {tagBox.name}
+            </Button>
+            ));
         return tagBoxArray;
     }
 
@@ -42,8 +54,8 @@ const TagPanel: React.FC<Props> = ({ tags, updateTags }) => {
         updateTags(ArrActive);
     }
 
-    return (
-        <div>
+    return(
+        <div className="m-3">
             {boxes()}
         </div>
     )
