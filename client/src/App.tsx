@@ -7,6 +7,7 @@ import { Profile } from './pages/Profile'
 import { Register } from './pages/Register'
 import { AddPost } from './pages/AddPost'
 import { Login } from './pages/Login'
+import { EditPost } from './pages/EditPost'
 
 const App: React.FC = () => {
   return (
@@ -20,6 +21,7 @@ const App: React.FC = () => {
           <Route path="/profile" component={Profile} />
           <Route path="/addPost" component={AddPost} />
           <Route path="/login" component={Login} />
+          <Route path="/editPost" component={EditPost} />
         </Switch>
       </div>
     </BrowserRouter>

@@ -1,9 +1,12 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import EditProfile from '../components/Profile/EditProfile'
 import { IPost } from '../components/props/Interfaces'
 import PostBoard from '../components/search/PostBoard'
+import { useHistory } from 'react-router-dom'
+
 
 export const Profile: React.FC = () => {
+    let history = useHistory();
     //need current user 
     const user = {
         "userid": 2,
@@ -66,7 +69,10 @@ export const Profile: React.FC = () => {
     ]
 
     const getActivePost: Function = (post: IPost): void => {
-        console.log(post)
+        history.push({
+            pathname: '/editPost',
+            state: { post: post }
+        })
     }
 
     return (
