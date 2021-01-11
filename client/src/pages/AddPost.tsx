@@ -1,20 +1,28 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { Button, FormControl, FormGroup, FormLabel } from 'react-bootstrap'
 import TagPanel from '../components/tags/TagPanel'
 import { ITags, IPostPOST } from '../components/props/Interfaces'
 
 export const AddPost: React.FC = () => {
     //TAGS
-    const tags = [
-        {
-            "tagid": 1,
-            "name": "Programista"
-        },
-        {
-            "tagid": 2,
-            "name": "Grafik"
-        }
-    ]
+    const [tags, setTags] = useState<ITags[]>([])
+    //TAGS
+    useEffect(() => {
+        fetch("https://api.fymate.co/tags")
+            .then(response => response.json())
+            .then(json => setTags(json))
+        console.log(tags)
+    }, [])
+    // const tags = [
+    //     {
+    //         "tagid": 1,
+    //         "name": "Programista"
+    //     },
+    //     {
+    //         "tagid": 2,
+    //         "name": "Grafik"
+    //     }
+    // ]
     //POST to POST HAAHAHAH
     const PostPOST: IPostPOST = {
         content: "",

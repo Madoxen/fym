@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { Button, FormControl, FormGroup, FormLabel } from 'react-bootstrap'
 import TagPanel from '../components/tags/TagPanel'
 import { ITags, IPostPOST, IPost } from '../components/props/Interfaces'
@@ -11,17 +11,30 @@ interface Ilocal {
 export const EditPost: React.FC = () => {
     const location = useLocation<Ilocal>();
     const history = useHistory();
+    const [tags, setTags] = useState<ITags[]>([])
     //TAGS
-    const tags = [
-        {
-            "tagid": 1,
-            "name": "Programista"
-        },
-        {
-            "tagid": 2,
-            "name": "Grafik"
+    useEffect(() => {
+        async function getData() {
+            await fetch("https://api.fymate.co/tags")
+                .then((res) => res.json())
+                .then((data: ITags[]) => setTags(data));
         }
-    ]
+        getData();
+        console.log("TAGS")
+        console.log(tags)
+    }, [])
+
+
+    // const tags = [
+    //     {
+    //         "tagid": 1,
+    //         "name": "Programista"
+    //     },
+    //     {
+    //         "tagid": 2,
+    //         "name": "Grafik"
+    //     }
+    // ]
     //POST to POST HAAHAHAH
     const PostPOST: IPostPOST = {
         content: location.state.post.content,
@@ -39,7 +52,6 @@ export const EditPost: React.FC = () => {
 
     //TODO SEND Post :)
     const SendChanges = (): void => {
-        console.log(PostPOST)
         history.push({
             pathname: '/profile'
         })
@@ -57,7 +69,6 @@ export const EditPost: React.FC = () => {
     const tagList: Function = (arr: number[]): ITags[] => {
         let TagsArr: ITags[] = []
         arr.map(tagid => TagsArr.push(tagOfId(tagid)))
-        console.log(TagsArr)
         return TagsArr
     }
 

@@ -1,8 +1,9 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import EditProfile from '../components/Profile/EditProfile'
-import { IPost } from '../components/props/Interfaces'
+import { IPost, ITags } from '../components/props/Interfaces'
 import PostBoard from '../components/search/PostBoard'
 import { useHistory } from 'react-router-dom'
+import { createAwait } from 'typescript'
 
 
 export const Profile: React.FC = () => {
@@ -27,16 +28,24 @@ export const Profile: React.FC = () => {
         }
     ]
     //TAGS
-    const tags = [
-        {
-            "tagid": 1,
-            "name": "Programista"
-        },
-        {
-            "tagid": 2,
-            "name": "Grafik"
-        }
-    ]
+    const [tags, setTags] = useState<ITags[]>([])
+    //TAGS
+    useEffect(() => {
+        fetch("https://api.fymate.co/tags")
+            .then(response => response.json())
+            .then(json => setTags(json))
+
+    }, [])
+    // const tags = [
+    //     {
+    //         "tagid": 1,
+    //         "name": "Programista"
+    //     },
+    //     {
+    //         "tagid": 2,
+    //         "name": "Grafik"
+    //     }
+    // ]
     const UserPosts = [
         {
             "postid": 13,
