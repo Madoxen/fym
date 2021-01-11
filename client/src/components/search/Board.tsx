@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import TagPanel from '../tags/TagPanel';
 import PostBoard from './PostBoard'
 import UserBoard from './UserBoard'
-import { ITags } from '../props/Interfaces'
+import { ITags,IPost } from '../props/Interfaces'
 import { Button, ButtonGroup } from 'react-bootstrap';
 
 const Board: React.FC = () => {
@@ -89,7 +89,7 @@ const Board: React.FC = () => {
             <TagPanel tags={tags} updateTags={getActiveTags} active={[tags[0]]}/>
             {
             searchMode 
-            ? <PostBoard users={users} tags={tags} posts={posts} filtr={activeTags}/> 
+            ? <PostBoard users={users} tags={tags} posts={posts} filtr={activeTags} edit={(post:IPost)=>console.log(`${post.title}`)}/> 
             : <UserBoard users={users} tags={tags} filtr={activeTags}/>
             }
             

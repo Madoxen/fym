@@ -29,7 +29,7 @@ const Post: React.FC<Props> = ({post,tags,users,edit}) => {
                 <Card.Text className="mt-2">
                     {post.content}<br/>
                     {postUser()}<br/>
-                    {edit !== undefined ? <Button size="sm" onClick={() => edit()}>Edit</Button> : null}
+                    {edit !== undefined ? <Button size="sm" onClick={() => edit(post)}>Edit</Button> : null}
                 </Card.Text>
             </Card.Body>
         </Card>
