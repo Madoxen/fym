@@ -1,81 +1,53 @@
 import React from 'react'
-import { ITags } from '../props/Interfaces'
+import { IPost, ITags,IUser } from '../props/Interfaces'
 import Post from './Post'
 import TagPanel from '../tags/TagPanel'
 
-const PostBoard: React.FC = () => {
+interface Props{
+    users: IUser[];
+    tags: ITags[];
+    posts: IPost[];
+    filtr: ITags[];
+}
 
+const PostBoard: React.FC<Props> = ({users,tags,posts,filtr}) => {
 
-    const posts = [
+    const listPosts: Function = (): JSX.Element[] => 
+    {
+        let postArr: IPost[] = []
+        let postJSX: JSX.Element[] = []
+        if(filtr.length !== 0) 
         {
-            "postid": 13,
-            "userid": 3,
-            "content": "1 Yes this is another post like that :D",
-            "title": "1 Anotha one",
-            "tagids": [
-                2
-            ]
-        },
-        {
-            "postid": 14,
-            "userid": 2,
-            "content": "2 Yes this is another post like that :D",
-            "title": "2 Anotha one",
-            "tagids": [
-                2
-            ]
-        },
-        {
-            "postid": 15,
-            "userid": 2,
-            "content": "3 Yes this is another post like that :D",
-            "title": "3 Anotha one",
-            "tagids": [
-                1,
-                2
-            ]
+            posts.forEach(post => haveTag(post,filtr) ? postArr.push(post) : null);
+            postArr.sort((a,b) => countUserTags(b) - countUserTags(a));
         }
-    ]
-    const tags = [
+        else
         {
-            "tagid": 1,
-            "name": "Programista"
-        },
-        {
-            "tagid": 2,
-            "name": "Grafik"
+            posts.forEach(post => postArr.push(post));
         }
-    ]
-    const users = [
-        {
-            "userid": 3,
-            "accountid": 3,
-            "profiledescription": "Bark bark",
-            "phone": "111 111 111",
-            "email": "Dog@bone.org"
-        },
-        {
-            "userid": 2,
-            "accountid": 2,
-            "profiledescription": "Woff woff",
-            "phone": "222 553 876",
-            "email": "cat@cat.org"
-        }
-    ]
-    const getActiveTags: Function = (tags: ITags[]): void=> {
-
-        console.log(tags);
+        postArr.forEach(post => postJSX.push(<Post tags={tags} post={post} users={users}/>));
+        return postJSX;
     }
 
+    const haveTag: Function = (post:IPost,tags:ITags[]): boolean => 
+    {
+        let have = false;
+        post.tagids.forEach(tagId => 
+            tags.forEach(tag => 
+                tag.tagid === tagId ? have = true : null)
+            );
+        return have;
+    }
 
+    const countUserTags: Function = (post: IPost): number =>
+    {
+        let counter = 0;
+        filtr.forEach(tag => post.tagids.includes(tag.tagid) ? counter++ : null)
+        return counter;
+    }
 
-    return(
-        <div>
-            <TagPanel tags={tags} updateTags={getActiveTags}/>
-            <Post post={posts[0]} tags={tags} users={users}/>
-            <Post post={posts[1]} tags={tags} users={users}/>
-            <Post post={posts[2]} tags={tags} users={users}/>
-        </div>
-    )
+    return(<div>{listPosts()}</div>)
+    //How call edit function 
+    //<Post post={posts[0]} tags={tags} users={users} edit={() => console.log("Edit")}/>
 };
 export default PostBoard

@@ -1,12 +1,13 @@
 import React, { Fragment } from 'react'
 import Counter from '../components/counter/Counter'
 import LoginModal from '../components/loginModal/LoginModal'
-import PostBoard from '../components/search/PostBoard'
+import Board from '../components/search/Board'
 
 export const Home: React.FC = () => {
+
   return (
     <Fragment>
-      <PostBoard/>
+      <Board/>
       <LoginModal />
     </Fragment>
   )

@@ -1,32 +1,18 @@
 import React from 'react'
-import { Card } from 'react-bootstrap'
+import { Button, Card } from 'react-bootstrap'
 import { IPost,ITags,IUser } from '../props/Interfaces'
+import TagList from '../tags/TagList'
 
 
 interface Props {
     post: IPost;
     tags: ITags[];
     users: IUser[];
+    edit?: Function;
 }
 
-const Post: React.FC<Props> = ({post,tags,users}) => {
+const Post: React.FC<Props> = ({post,tags,users,edit}) => {
 
-
-    const postTags: Function = (): JSX.Element[] => 
-    {
-        let tagArray:JSX.Element[] = [];
-        post.tagids.forEach(tagId => tagArray.push(
-            <span key={tagId}> {tagOfId(tagId)} </span>
-            ));
-        return tagArray;
-    }
-
-    const tagOfId: Function = (id: number): string =>
-    {
-        let tagName:string = "";
-        tags.forEach(tag => tag.tagid === id ? tagName = tag.name : null);
-        return tagName;
-    }
 
     const postUser: Function = (): JSX.Element[] => 
     {
@@ -39,9 +25,11 @@ const Post: React.FC<Props> = ({post,tags,users}) => {
         <Card >
             <Card.Body>
                 <Card.Title>{post.title}</Card.Title>
-                <Card.Subtitle>{postTags()}</Card.Subtitle>
+                <Card.Subtitle><TagList tagids={post.tagids} tags={tags} /></Card.Subtitle>
                 <Card.Text>{post.content}</Card.Text>
                 <Card.Link href="#">{postUser()}</Card.Link>
+                <br/>
+                {edit !== undefined ? <Button onClick={() => edit()}>Edit</Button> : null}
             </Card.Body>
         </Card>
     )
