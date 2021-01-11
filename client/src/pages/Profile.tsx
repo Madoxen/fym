@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react'
 import EditProfile from '../components/Profile/EditProfile'
+import { IPost } from '../components/props/Interfaces'
 import PostBoard from '../components/search/PostBoard'
 
 export const Profile: React.FC = () => {
@@ -10,9 +11,18 @@ export const Profile: React.FC = () => {
         "profiledescription": "Hej im derek and i taste like serek",
         "phone": "111 222 111",
         "email": "derek@serek.com",
-        "tagIDs": [1, 2]
+        "tagids": [1, 2]
     }
-
+    const users = [
+        {
+            "userid": 2,
+            "accountid": 3,
+            "profiledescription": "Hej im derek and i taste like serek",
+            "phone": "111 222 111",
+            "email": "derek@serek.com",
+            "tagids": [1, 2]
+        }
+    ]
     //TAGS
     const tags = [
         {
@@ -24,7 +34,6 @@ export const Profile: React.FC = () => {
             "name": "Grafik"
         }
     ]
-
     const UserPosts = [
         {
             "postid": 13,
@@ -55,12 +64,17 @@ export const Profile: React.FC = () => {
             ]
         }
     ]
+
+    const getActivePost: Function = (post: IPost): void => {
+        console.log(post)
+    }
+
     return (
         <Fragment>
             <h1 style={{ textAlign: "center" }}>Edit Your Profile</h1>
             <EditProfile user={user} tags={tags}></EditProfile>
             <h1 style={{ textAlign: "center" }}>Your Post</h1>
-            <PostBoard></PostBoard>
+            <PostBoard posts={UserPosts} users={users} tags={tags} edit={getActivePost}></PostBoard>
         </Fragment>
     )
 }
