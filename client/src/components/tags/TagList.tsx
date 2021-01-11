@@ -1,4 +1,5 @@
 import React from 'react'
+import { Badge } from 'react-bootstrap';
 import { ITags } from '../props/Interfaces'
 
 interface Props {
@@ -12,7 +13,12 @@ const TagList: React.FC<Props> = ({tagids,tags}) => {
     {
         let tagArray:JSX.Element[] = [];
         tagids.forEach(tagId => tagArray.push(
-            <span key={tagId}> {tagOfId(tagId)} </span>
+            <Badge 
+            pill 
+            variant="primary" 
+            key={tagId} 
+            style={{color: 'white',fontWeight: 'normal',fontSize: "12px",margin: "0px 10px 0px 0px"}}
+            >{tagOfId(tagId)}</Badge>
             ));
         return tagArray;
     }
@@ -25,7 +31,7 @@ const TagList: React.FC<Props> = ({tagids,tags}) => {
     }
 
     return(
-        <div>
+        <div className="d-flex">
             {listTags()}
         </div>
     )
