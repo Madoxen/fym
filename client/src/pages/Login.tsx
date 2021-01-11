@@ -1,14 +1,18 @@
 import React, { Fragment } from 'react'
 import { FormGroup, FormLabel, FormControl, Button } from 'react-bootstrap'
+import { useDispatch } from 'react-redux'
 import { ILoginPOST } from '../components/props/Interfaces'
+import { setUsername } from '../features/login/loginReducer'
 
 export const Login: React.FC = () => {
+    const dispatch = useDispatch()
     const LoginPOST: ILoginPOST = {
         username: "",
         password: ""
     }
     const SendChanges = (): void => {
         console.log(LoginPOST)
+        dispatch(setUsername(LoginPOST.username));
     }
 
     return (
