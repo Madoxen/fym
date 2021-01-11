@@ -4,6 +4,7 @@ import PostBoard from './PostBoard'
 import UserBoard from './UserBoard'
 import { ITags,IPost } from '../props/Interfaces'
 import { Button, ButtonGroup } from 'react-bootstrap';
+import { http } from '../api/http';
 
 const Board: React.FC = () => {
 
@@ -21,11 +22,7 @@ const Board: React.FC = () => {
         console.log(tags);
      }
 
-    async function http<T>(request: RequestInfo): Promise<T> {
-        const response = await fetch(request);
-        const body = await response.json();
-        return body;
-      }
+
       
       
     const posts = [
