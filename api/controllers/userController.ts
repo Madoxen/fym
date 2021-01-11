@@ -7,7 +7,7 @@ import UserDetails, { IUserDetails } from '../models/userDetails';
 interface getUsersRequestQuery {
     start: number;
     limit: number;
-    tagids: number;
+    tagids: number[];
 }
 
 
@@ -41,7 +41,17 @@ class UserController {
     }
 
     getUsers = async (req: Request<{}, {}, {}, getUsersRequestQuery>, res: Response<IUserDetails[]>) => {
-        let details = await UserDetails.getUserDetailsRange(req.query.start, req.query.limit);
+
+        if(req.query.tagids === undefined)
+            req.query.tagids = [];
+
+        let details = await db.query(`SELECT auth.username, ud.profiledescription, ud.phone, ud.email, array_agg(ut.tagid) tagids FROM userdetails ud
+        INNER JOIN auth ON auth.id = ud.accountid
+        LEFT JOIN usertags ut ON ud.userid = ut.userid 
+        WHERE ut.userid = ANY(SELECT DISTINCT userid FROM usertags WHERE tagid = ANY ($1))
+        GROUP BY auth.username, ud.profiledescription, ud.phone, ud.email
+        LIMIT $2 OFFSET $3`, [req.query.tagids, req.query.limit, req.query.start]).then(r => r.rows);
+
         if (details !== null)
             return res.status(200).json(details);
         return res.status(404).send();
