@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import { ITagBox,ITags } from '../props/Interfaces'
 import { Button } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 interface Props {
     tags: ITags[];
@@ -18,8 +19,7 @@ const TagPanel: React.FC<Props> = ({tags,updateTags,active}) => {
         return isActive;
     }
 
-    const assignTags: Function = (): ITagBox[] =>
-    {
+    const assignTags: Function = (): ITagBox[] => {
         let tagArr: ITagBox[] = []
         tags.forEach(tag => tagArr.push({tagid: tag.tagid,name: tag.name,active: isTagActive(tag)}));
         return tagArr;
@@ -27,9 +27,8 @@ const TagPanel: React.FC<Props> = ({tags,updateTags,active}) => {
     const [tagBoxes, setTagBoxes] = useState<ITagBox[]>(assignTags());
 
 
-    const boxes: Function = (): JSX.Element[] => 
-    {
-        let tagBoxArray:JSX.Element[] = [];
+    const boxes: Function = (): JSX.Element[] => {
+        let tagBoxArray: JSX.Element[] = [];
         tagBoxes.forEach(tagBox => tagBoxArray.push(
             <Button 
                 className="ml-1 mr-1 p-1 rounded"
@@ -45,14 +44,13 @@ const TagPanel: React.FC<Props> = ({tags,updateTags,active}) => {
         return tagBoxArray;
     }
 
-    const tagClick: Function = (id: number): void => 
-    {
+    const tagClick: Function = (id: number): void => {
         let newArr = [...tagBoxes];
         newArr.map(tag => tag.tagid === id ? tag.active = !tag.active : null);
         setTagBoxes(newArr);
 
         let ArrActive: ITags[] = [];
-        newArr.map(tag => tag.active? ArrActive.push({tagid: tag.tagid,name: tag.name}): null)
+        newArr.map(tag => tag.active ? ArrActive.push({ tagid: tag.tagid, name: tag.name }) : null)
         updateTags(ArrActive);
     }
 
