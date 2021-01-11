@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import TagPanel from '../tags/TagPanel';
 import PostBoard from './PostBoard'
 import UserBoard from './UserBoard'
-import { ITags } from '../props/Interfaces'
+import { ITags,IPost } from '../props/Interfaces'
 import { Button, ButtonGroup } from 'react-bootstrap';
 
 const Board: React.FC = () => {
@@ -82,14 +82,14 @@ const Board: React.FC = () => {
     
     return(
         <div>
-            <TagPanel tags={tags} updateTags={getActiveTags} active={[tags[0]]}/>
-            <ButtonGroup aria-label="Basic example">
-                <Button variant={searchMode ? "secondary" : "primary"} onClick={() => setSearchMode(false)} >Users</Button>
-                <Button variant={searchMode ? "primary" : "secondary"} onClick={() => setSearchMode(true)}>Posts</Button>
+            <ButtonGroup aria-label="Basic example" className="d-flex justify-content-center mt-3">
+                <Button variant={searchMode ? "secondary" : "primary"} onClick={() => setSearchMode(false)} onMouseDown={(e) => e.preventDefault()}>Users</Button>
+                <Button variant={searchMode ? "primary" : "secondary"} onClick={() => setSearchMode(true)} onMouseDown={(e) => e.preventDefault()}>Posts</Button>
             </ButtonGroup>
+            <TagPanel tags={tags} updateTags={getActiveTags} active={[tags[0]]}/>
             {
             searchMode 
-            ? <PostBoard users={users} tags={tags} posts={posts} filtr={activeTags}/> 
+            ? <PostBoard users={users} tags={tags} posts={posts} filtr={activeTags} edit={(post:IPost)=>console.log(`${post.title}`)}/> 
             : <UserBoard users={users} tags={tags} filtr={activeTags}/>
             }
             
