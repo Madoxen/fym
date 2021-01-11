@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import TagPanel from '../tags/TagPanel';
 import PostBoard from './PostBoard'
 import UserBoard from './UserBoard'
@@ -9,7 +9,25 @@ const Board: React.FC = () => {
 
     const [searchMode, setSearchMode] = useState<boolean>(true);
     const [activeTags, setActiveTags] = useState<ITags[]>([]);
+    const [tags, setTags] = useState<ITags[]>([]);
 
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        let tab: ITags[] = await http<ITags[]>("https://api.fymate.co/tags");
+        setTags(tab);
+        console.log(tags);
+     }
+
+    async function http<T>(request: RequestInfo): Promise<T> {
+        const response = await fetch(request);
+        const body = await response.json();
+        return body;
+      }
+      
+      
     const posts = [
         {
             "postid": 13,
@@ -40,16 +58,7 @@ const Board: React.FC = () => {
             ]
         }
     ]
-    const tags = [
-        {
-            "tagid": 1,
-            "name": "Programista"
-        },
-        {
-            "tagid": 2,
-            "name": "Grafik"
-        }
-    ]
+
     const users = [
         {
             "userid": 3,
@@ -76,6 +85,7 @@ const Board: React.FC = () => {
             "tagids": [1]
         }
     ]
+
     const getActiveTags: Function = (tags: ITags[]): void=> {
         setActiveTags(tags);
     }
@@ -86,7 +96,7 @@ const Board: React.FC = () => {
                 <Button variant={searchMode ? "secondary" : "primary"} onClick={() => setSearchMode(false)} onMouseDown={(e) => e.preventDefault()}>Users</Button>
                 <Button variant={searchMode ? "primary" : "secondary"} onClick={() => setSearchMode(true)} onMouseDown={(e) => e.preventDefault()}>Posts</Button>
             </ButtonGroup>
-            <TagPanel tags={tags} updateTags={getActiveTags} active={[tags[0]]}/>
+            <TagPanel tags={tags} updateTags={getActiveTags} active={activeTags}/>
             {
             searchMode 
             ? <PostBoard users={users} tags={tags} posts={posts} filtr={activeTags} edit={(post:IPost)=>console.log(`${post.title}`)}/> 
