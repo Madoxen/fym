@@ -15,18 +15,6 @@ export const Navigation: React.FC = () => (
       </NavItem>
       <NavItem>
         {' '}
-        <Link className="nav-link" to="/about">
-          About
-        </Link>{' '}
-      </NavItem>
-      <NavItem>
-        {' '}
-        <Link className="nav-link" to="/register">
-          Register
-        </Link>{' '}
-      </NavItem>
-      <NavItem>
-        {' '}
         <Link className="nav-link" to="/profile">
           Profile
         </Link>{' '}
@@ -40,9 +28,15 @@ export const Navigation: React.FC = () => (
       <NavItem>
         {' '}
         <Link className="nav-link" to="/login">
-          Login
+          Log in
         </Link>{' '}
       </NavItem>
     </Nav>
+    <NavItem>
+      {' '}
+      <Link className="nav-link" to="/register">
+        Register
+        </Link>{' '}
+    </NavItem>
   </Navbar>
 )

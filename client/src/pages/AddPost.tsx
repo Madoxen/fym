@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react'
 import { Button, FormControl, FormGroup, FormLabel } from 'react-bootstrap'
-import LoginModal from '../components/loginModal/LoginModal'
 import TagPanel from '../components/tags/TagPanel'
 import { ITags, IPostPOST } from '../components/props/Interfaces'
 
