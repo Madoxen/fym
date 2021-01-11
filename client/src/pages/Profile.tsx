@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment } from 'react'
 import EditProfile from '../components/Profile/EditProfile'
 import { IPost } from '../components/props/Interfaces'
 import PostBoard from '../components/search/PostBoard'
