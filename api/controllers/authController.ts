@@ -13,6 +13,14 @@ const JWT_REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_TOKEN_SECRET;
 const JWT_ACCESS_TOKEN_TTL = process.env.JWT_ACCESS_TOKEN_TTL;
 const JWT_REFRESH_TOKEN_TTL = process.env.JWT_REFRESH_TOKEN_TTL;
 
+
+
+export interface ILoginPOST {
+      username: string,
+      password: string
+}
+
+
 //This controller provides auth services for users
 //Uses JWT as an auth mechanism
 class AuthController {
@@ -34,14 +42,14 @@ class AuthController {
 
             //create new user
             let u = new UserAccount(req.body.username, req.body.email, pass_hash);
-            let ud = new UserDetails(req.body.username);
+
             try //try push to database
             {
                   let acc = await UserAccount.insert(u); //wait for DB
                   if (acc?.id === undefined)
                         return res.status(500).send();
-
-                  let details = await UserDetails.insert(ud, acc?.id);
+                  let ud = new UserDetails(0, acc.id);
+                  await UserDetails.insert(ud, acc?.id);
                   return res.status(200).send(this.generateTokens(req, u.username)); //after DB has successfully inserted a user, send 200
             }
             catch (err) {
@@ -140,11 +148,11 @@ class AuthController {
       deleteUser = async (req: Request, res: Response) => {
             try {
                   await db.query("DELETE FROM auth WHERE username=$1", [req.params.username])
-                  res.status(200);
+                  return res.status(200).send();
             }
             catch
             {
-                  res.status(500).send("Could not delete user")
+                  return res.status(500).send("Could not delete user")
             }
 
       }

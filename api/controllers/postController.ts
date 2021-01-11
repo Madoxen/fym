@@ -10,6 +10,11 @@ interface IFindPostsQuery {
     author?: string;
 }
 
+export interface IPostPOST {
+    content: string,
+    title: string,
+    tagids: number[]
+}
 
 class PostController {
 
