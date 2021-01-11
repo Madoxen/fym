@@ -25,7 +25,7 @@ const PostBoard: React.FC<Props> = ({users,tags,posts,filtr}) => {
         {
             posts.forEach(post => postArr.push(post));
         }
-        postArr.forEach(post => postJSX.push(<Post tags={tags} post={post} users={users}/>));
+        postArr.forEach(post => postJSX.push(<Post key={post.postid} tags={tags} post={post} users={users}/>));
         return postJSX;
     }
 
