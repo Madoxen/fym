@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { NetworkAuthenticationRequire } from 'http-errors';
 import db from '../db';
 import UserAccount from '../models/userAccount'
 import UserDetails, { IUserDetails } from '../models/userDetails';
@@ -6,6 +7,15 @@ import UserDetails, { IUserDetails } from '../models/userDetails';
 interface getUsersRequestQuery {
     start: number;
     limit: number;
+}
+
+
+export interface IUserPOST {
+    profileDescription: string,
+    visibleName: string,
+    telephone: string,
+    contactEmail: string,
+    tagids: number[]
 }
 
 
@@ -33,18 +43,38 @@ class UserController {
     }
 
 
-    updateUserProfile = async (req: Request<{ username: string }, {}, IUserDetails>, res: Response) => {
+    updateUserProfile = async (req: Request<{ username: string }, {}, IUserPOST>, res: Response) => {
+
+
+        // note: we don't try/catch this because if connecting throws an exception
+        // we don't need to dispose of the client (it will be undefined)
+        const client = await db.pool.connect()
         try {
+            await client.query('BEGIN')
+            //Insert new post
             let acc = await (await db.query("SELECT id FROM auth WHERE username=$1", [req.params.username])).rows[0]
             if (acc === undefined || acc === null)
+            {
+                await client.query('ROLLBACK')
                 return res.status(404).send("Username not found")
-            await UserDetails.update({ ...req.body, id: acc.id });
+            }
+            const ud = await UserDetails.update({ ...req.body, userid: acc.id });
+            //Insert user tags
+            const tagInsertTasks: Promise<any>[] = []
+            await client.query("DELETE FROM userTags where userid=$1", [ud?.userid])
+            req.body.tagids.forEach(tagID => {
+                tagInsertTasks.push(client.query("INSERT INTO userTags(userid, tagid) VALUES ($1,$2)", [ud?.userid, tagID]))
+            });
+            await Promise.all(tagInsertTasks);
+            await client.query('COMMIT')
             return res.status(200).send();
-        }
-        catch
-        {
-            return res.status(500).send();
-        }
+        } catch (e) {
+            await client.query('ROLLBACK')
+            res.status(500).send();
+            throw e;
+        } finally {
+            client.release()
+        }  
     }
 }
 

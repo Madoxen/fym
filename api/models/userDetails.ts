@@ -8,7 +8,7 @@ import { Post } from "./post";
 
 export interface IUserDetails {
 
-    readonly id?: number; //Unique
+    readonly userid?: number; //Unique
     profileDescription?: string;
     telephone?: string;
     contactEmail?: string;
@@ -16,14 +16,16 @@ export interface IUserDetails {
 
 
 class UserDetails implements IUserDetails {
-    readonly id: number; //Unique
+    readonly accountid: number;
+    readonly userid: number; //Unique
     profileDescription: string = "";
     telephone: string = "";
     contactEmail: string = "";
 
     //We need to provide associated username for UserDetails
-    constructor(username: string) {
-        this.id = 0
+    constructor(userid: number, accountid: number) {
+        this.userid = userid;
+        this.accountid = accountid;
     }
 
     //Push user object into database, and return id
@@ -37,7 +39,7 @@ class UserDetails implements IUserDetails {
     //Update user object that has the same ID 
     static async update(usr: IUserDetails): Promise<UserDetails | null> {
         return db.query("UPDATE userDetails SET profileDescription=$1, phone=$2, email=$3 WHERE userID=$4 RETURNING *",
-            [usr.profileDescription, usr.telephone, usr.contactEmail, usr.id])
+            [usr.profileDescription, usr.telephone, usr.contactEmail, usr.userid])
             .then(res => res.rows[0])
             .catch(null);
     }
