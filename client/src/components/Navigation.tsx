@@ -1,6 +1,7 @@
 import React from 'react'
 import { Nav, Navbar, NavDropdown, NavItem } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { Link } from 'react-router-dom'
 
 export const Navigation: React.FC = () => (
   <Navbar collapseOnSelect expand="sm" bg="primary" variant="dark">
@@ -8,13 +9,13 @@ export const Navigation: React.FC = () => (
     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
     <Navbar.Collapse id="responsive-navbar-nav">
       <Nav className="mr-auto">
-        <Nav.Link href="/">Home</Nav.Link>
-        <Nav.Link href="/profile">Profile</Nav.Link>
-        <Nav.Link href="/addpost">Add Post</Nav.Link>
+        <Link className="nav-link" to="/" >Home</Link>
+        <Link className="nav-link" to="/profile">Profile</Link>
+        <Link className="nav-link" to="/addpost">Add Post</Link>
       </Nav>
       <Nav>
-        <Nav.Link href="/login">Log in </Nav.Link>
-        <Nav.Link href="/register">Register</Nav.Link>
+        <Link className="nav-link" to="/login">Log in </Link>
+        <Link className="nav-link" to="/register">Register</Link>
       </Nav>
     </Navbar.Collapse>
   </Navbar>
