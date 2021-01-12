@@ -16,7 +16,7 @@ export const Register: React.FC = () => {
         if (password === '' || username === '' || passwordConfirm === '') {
             console.log('BAD !!')
         } else {
-            fetch(process.env.REACT_APP_API_URL + '/auth/register', {
+            fetch(process.env.REACT_APP_API_URL + '/auth/register/', {
                 method: 'POST',
                 body: JSON.stringify({
                     email: email,
@@ -27,6 +27,7 @@ export const Register: React.FC = () => {
                     Accept: 'application/json',
                     'Content-type': 'application/json; charset=UTF-8',
                 },
+                mode: 'cors'
             })
                 .then((r) => r.json())
                 .then((r) =>

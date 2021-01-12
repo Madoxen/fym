@@ -1,15 +1,16 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import EditProfile from '../components/Profile/EditProfile'
-import { IPost } from '../components/props/Interfaces'
+import { IPost, ITags } from '../components/props/Interfaces'
 import PostBoard from '../components/search/PostBoard'
 import { useHistory } from 'react-router-dom'
+import { http } from '../components/api/http'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUsername } from '../features/login/loginReducer'
-import { getAccessToken } from '../features/auth/selectors'
 
 
 export const Profile: React.FC = () => {
     let history = useHistory();
+
     const dispatch = useDispatch();
     const username = useSelector(getUsername);
     const [user, setUser] = useState({
@@ -58,14 +59,47 @@ export const Profile: React.FC = () => {
         user
     ]
     //TAGS
-    const tags = [
+    const [tags, setTags] = useState<ITags[]>([])
+    //TAGS
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        let tab: ITags[] = await http<ITags[]>("https://api.fymate.co/tags");
+        setTags(tab);
+        console.log(tags);
+    }
+
+    const UserPosts = [
         {
-            "tagid": 1,
-            "name": "Programista"
+            "postid": 13,
+            "userid": 3,
+            "content": "1 Yes this is another post like that :D",
+            "title": "1 Anotha one",
+            "tagids": [
+                2
+            ]
         },
         {
-            "tagid": 2,
-            "name": "Grafik"
+            "postid": 14,
+            "userid": 2,
+            "content": "2 Yes this is another post like that :D",
+            "title": "2 Anotha one",
+            "tagids": [
+                2
+            ]
+        },
+        {
+            "postid": 15,
+            "userid": 2,
+            "content": "3 Yes this is another post like that :D",
+            "title": "3 Anotha one",
+            "tagids": [
+                1,
+                2
+            ]
+
         }
     ]
 
