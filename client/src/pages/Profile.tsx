@@ -81,7 +81,7 @@ export const Profile: React.FC = () => {
             <h1 style={{ textAlign: "center" }}>Edit Your Profile</h1>
             <EditProfile user={user} tags={tags}></EditProfile>
             <h1 style={{ textAlign: "center" }}>Your Post</h1>
-            <PostBoard posts={userPosts} users={users} tags={tags} edit={getActivePost}></PostBoard>
+            <PostBoard posts={userPosts} tags={tags} edit={getActivePost}></PostBoard>
         </Fragment>
     )
 }
