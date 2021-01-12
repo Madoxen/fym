@@ -15,8 +15,7 @@ export interface ITagBox {
     active: boolean;
 }
 export interface IUser {
-    userid: number;
-    accountid: number;
+    username: string;
     profiledescription: string;
     phone: string;
     email: string;

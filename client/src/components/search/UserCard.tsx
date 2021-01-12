@@ -13,7 +13,7 @@ const UserCard: React.FC<Props> = ({tags,user}) => {
     return(
         <Card >
             <Card.Body>
-                <Card.Title>Username {user.userid}</Card.Title>
+                <Card.Title>{user.username}</Card.Title>
                 <Card.Subtitle><TagList tagids={user.tagids} tags={tags}/></Card.Subtitle>
                 <Card.Text>{user.profiledescription}</Card.Text>
                 <Card.Link href="#">{user.phone} {user.email}</Card.Link>

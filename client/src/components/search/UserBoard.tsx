@@ -23,7 +23,7 @@ const UserBoard: React.FC<Props> = ({users,tags,filtr}) => {
         {
             users.forEach(user => userArr.push(user));
         }
-        userArr.forEach(user => userJSX.push(<UserCard key={user.userid} tags={tags} user={user}/>));
+        userArr.forEach(user => userJSX.push(<UserCard key={user.username} tags={tags} user={user}/>));
         return userJSX;
     }
 

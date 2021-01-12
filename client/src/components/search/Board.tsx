@@ -1,8 +1,8 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import TagPanel from '../tags/TagPanel';
 import PostBoard from './PostBoard'
 import UserBoard from './UserBoard'
-import { ITags,IPost } from '../props/Interfaces'
+import { ITags, IPost } from '../props/Interfaces'
 import { Button, ButtonGroup } from 'react-bootstrap';
 import { http } from '../api/http';
 
@@ -11,6 +11,8 @@ const Board: React.FC = () => {
     const [searchMode, setSearchMode] = useState<boolean>(true);
     const [activeTags, setActiveTags] = useState<ITags[]>([]);
     const [tags, setTags] = useState<ITags[]>([]);
+    const [posts, setPosts] = useState([]);
+    const [users, setUsers] = useState([]);
 
     useEffect(() => {
         fetchData();
@@ -20,87 +22,51 @@ const Board: React.FC = () => {
         let tab: ITags[] = await http<ITags[]>("https://api.fymate.co/tags");
         setTags(tab);
         console.log(tags);
-     }
+
+        //fetch some posts and users
+        fetch(process.env.REACT_APP_API_URL + '/users', {
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+        })
+            .then((r) => r.json())
+            .then((r) => {
+                setUsers(r)
+            })
 
 
-      
-      
-    const posts = [
-        {
-            "postid": 13,
-            "userid": 3,
-            "content": "1 Yes this is another post like that :D",
-            "title": "1 Anotha one",
-            "tagids": [
-                2
-            ]
-        },
-        {
-            "postid": 14,
-            "userid": 2,
-            "content": "2 Yes this is another post like that :D",
-            "title": "2 Anotha one",
-            "tagids": [
-                2
-            ]
-        },
-        {
-            "postid": 15,
-            "userid": 2,
-            "content": "3 Yes this is another post like that :D",
-            "title": "3 Anotha one",
-            "tagids": [
-                1,
-                2
-            ]
-        }
-    ]
+        //fetch some posts and users
+        fetch(process.env.REACT_APP_API_URL + '/posts', {
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+        })
+            .then((r) => r.json())
+            .then((r) => {
+                setPosts(r)
+            })
+    }
 
-    const users = [
-        {
-            "userid": 3,
-            "accountid": 3,
-            "profiledescription": "Bark bark",
-            "phone": "111 111 111",
-            "email": "Dog@bone.org",
-            "tagids": [2]
-        },
-        {
-            "userid": 2,
-            "accountid": 2,
-            "profiledescription": "Woff woff",
-            "phone": "222 553 876",
-            "email": "cat@cat.org",
-            "tagids": [1,2]
-        },
-        {
-            "userid": 1,
-            "accountid": 1,
-            "profiledescription": "Miow",
-            "phone": "232 123 876",
-            "email": "bot@bot.org",
-            "tagids": [1]
-        }
-    ]
-
-    const getActiveTags: Function = (tags: ITags[]): void=> {
+    const getActiveTags: Function = (tags: ITags[]): void => {
         setActiveTags(tags);
     }
-    
-    return(
+
+    return (
         <div>
             <ButtonGroup aria-label="Basic example" className="d-flex justify-content-center mt-3">
                 <Button variant={searchMode ? "secondary" : "primary"} onClick={() => setSearchMode(false)} onMouseDown={(e) => e.preventDefault()}>Users</Button>
                 <Button variant={searchMode ? "primary" : "secondary"} onClick={() => setSearchMode(true)} onMouseDown={(e) => e.preventDefault()}>Posts</Button>
             </ButtonGroup>
-            <TagPanel tags={tags} updateTags={getActiveTags} active={activeTags}/>
+            <TagPanel tags={tags} updateTags={getActiveTags} active={activeTags} />
             {
-            searchMode 
-            ? <PostBoard users={users} tags={tags} posts={posts} filtr={activeTags} edit={(post:IPost)=>console.log(`${post.title}`)}/> 
-            : <UserBoard users={users} tags={tags} filtr={activeTags}/>
+                searchMode
+                    ? <PostBoard users={users} tags={tags} posts={posts} filtr={activeTags} edit={(post: IPost) => console.log(`${post.title}`)} />
+                    : <UserBoard users={users} tags={tags} filtr={activeTags} />
             }
-            
-            
+
+
         </div>
     )
 };
