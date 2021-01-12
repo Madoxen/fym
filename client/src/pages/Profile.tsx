@@ -47,8 +47,6 @@ export const Profile: React.FC = () => {
                 setUserPosts(r)
             )
 
-
-
         return () => console.log('unmounting...');
     }, [])  // <-- add this empty array here
 

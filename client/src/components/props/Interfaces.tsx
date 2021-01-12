@@ -26,7 +26,7 @@ export interface IUserPOST {
     visibleName: string,
     telephone: string,
     contactEmail: string,
-    tagIDs: number[]
+    tagids: number[]
 }
 export interface IPostPOST {
     content: string,

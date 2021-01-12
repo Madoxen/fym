@@ -95,8 +95,7 @@ LIMIT $2 OFFSET $3`, [req.query.tagids, req.query.limit, req.query.start]).then(
             return res.status(200).send();
         } catch (e) {
             await client.query('ROLLBACK')
-            res.status(500).send();
-            throw e;
+            return res.status(500).send();
         } finally {
             client.release()
         }
