@@ -21,3 +21,8 @@ code {
   display: flex;
   justify-content: space-between;
 }
+
+nav {
+  height: auto;
+  line-height:normal;
+}

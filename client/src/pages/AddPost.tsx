@@ -1,10 +1,11 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { Button, FormControl, FormGroup, FormLabel } from 'react-bootstrap'
 import TagPanel from '../components/tags/TagPanel'
 import { ITags, IPostPOST } from '../components/props/Interfaces'
 import { useSelector } from 'react-redux'
 import { getAccessToken } from '../features/auth/selectors'
 import { getUsername } from '../features/login/loginReducer'
+import { fetchFunction } from '../components/api/FetchFunction'
 
 export const AddPost: React.FC = () => {
     const acc = useSelector(getAccessToken);
@@ -12,16 +13,16 @@ export const AddPost: React.FC = () => {
 
 
     //TAGS
-    const tags = [
-        {
-            "tagid": 1,
-            "name": "Programista"
-        },
-        {
-            "tagid": 2,
-            "name": "Grafik"
-        }
-    ]
+    const [tags, setTags] = useState<ITags[]>([])
+    //TAGS
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        fetchFunction('/tags', setTags);
+    }
+
     //POST to POST HAAHAHAH
     const PostPOST: IPostPOST = {
         content: "",

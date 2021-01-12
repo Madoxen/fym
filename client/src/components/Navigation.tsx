@@ -1,42 +1,21 @@
 import React from 'react'
-import { Nav, Navbar, NavItem } from 'react-bootstrap'
+import { Nav, Navbar, NavDropdown, NavItem } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { Link } from 'react-router-dom'
 
 export const Navigation: React.FC = () => (
-  <Navbar bg="primary" variant="dark">
+  <Navbar collapseOnSelect expand="sm" bg="primary" variant="dark">
     <Navbar.Brand href="/">Fymate.co</Navbar.Brand>
-    <Nav className="mr-auto">
-      <NavItem>
-        {' '}
-        <Link className="nav-link" to="/">
-          Home
-        </Link>{' '}
-      </NavItem>
-      <NavItem>
-        {' '}
-        <Link className="nav-link" to="/profile">
-          Profile
-        </Link>{' '}
-      </NavItem>
-      <NavItem>
-        {' '}
-        <Link className="nav-link" to="/addPost">
-          AddPost
-        </Link>{' '}
-      </NavItem>
-      <NavItem>
-        {' '}
-        <Link className="nav-link" to="/login">
-          Log in
-        </Link>{' '}
-      </NavItem>
-    </Nav>
-    <NavItem>
-      {' '}
-      <Link className="nav-link" to="/register">
-        Register
-        </Link>{' '}
-    </NavItem>
+    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+    <Navbar.Collapse id="responsive-navbar-nav">
+      <Nav className="mr-auto">
+        <Nav.Link href="/">Home</Nav.Link>
+        <Nav.Link href="/profile">Profile</Nav.Link>
+        <Nav.Link href="/addpost">Add Post</Nav.Link>
+      </Nav>
+      <Nav>
+        <Nav.Link href="/login">Log in </Nav.Link>
+        <Nav.Link href="/register">Register</Nav.Link>
+      </Nav>
+    </Navbar.Collapse>
   </Navbar>
 )
