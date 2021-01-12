@@ -7,7 +7,6 @@ export const Home: React.FC = () => {
   return (
     <Fragment>
       <Board />
-      <LoginModal />
     </Fragment>
   )
 }
