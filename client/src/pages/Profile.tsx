@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import EditProfile from '../components/Profile/EditProfile'
-import { IPost, ITags } from '../components/props/Interfaces'
+import { IPost, ITags, IUser } from '../components/props/Interfaces'
 import PostBoard from '../components/search/PostBoard'
 import { useHistory } from 'react-router-dom'
 import { fetchFunction } from '../components/api/FetchFunction'
