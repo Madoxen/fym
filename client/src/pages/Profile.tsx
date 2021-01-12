@@ -4,29 +4,59 @@ import { IPost, ITags } from '../components/props/Interfaces'
 import PostBoard from '../components/search/PostBoard'
 import { useHistory } from 'react-router-dom'
 import { http } from '../components/api/http'
+import { useDispatch, useSelector } from 'react-redux'
+import { getUsername } from '../features/login/loginReducer'
 
 
 export const Profile: React.FC = () => {
     let history = useHistory();
-    //need current user 
-    //user
-    const user = {
-        "userid": 2,
-        "accountid": 3,
-        "profiledescription": "Hej im derek and i taste like serek",
-        "phone": "111 222 111",
-        "email": "derek@serek.com",
-        "tagids": [1, 2]
-    }
+
+    const dispatch = useDispatch();
+    const username = useSelector(getUsername);
+    const [user, setUser] = useState({
+        "username": "",
+        "profiledescription": "",
+        "phone": "",
+        "email": "",
+        "tagids": []
+    });
+
+    const [userPosts, setUserPosts] = useState([]);
+
+
+    useEffect(() => {
+        //Fetch on mount
+        fetch(process.env.REACT_APP_API_URL + '/users/' + username, {
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+        })
+            .then((r) => r.json())
+            .then((r) =>
+                setUser(r)
+            )
+
+        fetch(process.env.REACT_APP_API_URL + '/posts/' + username, {
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+        })
+            .then((r) => r.json())
+            .then((r) =>
+                setUserPosts(r)
+            )
+
+        return () => console.log('unmounting...');
+    }, [])  // <-- add this empty array here
+
+
+
+
+
     const users = [
-        {
-            "userid": 2,
-            "accountid": 3,
-            "profiledescription": "Hej im derek and i taste like serek",
-            "phone": "111 222 111",
-            "email": "derek@serek.com",
-            "tagids": [1, 2]
-        }
+        user
     ]
     //TAGS
     const [tags, setTags] = useState<ITags[]>([])
@@ -69,6 +99,7 @@ export const Profile: React.FC = () => {
                 1,
                 2
             ]
+
         }
     ]
 
@@ -84,7 +115,7 @@ export const Profile: React.FC = () => {
             <h1 style={{ textAlign: "center" }}>Edit Your Profile</h1>
             <EditProfile user={user} tags={tags}></EditProfile>
             <h1 style={{ textAlign: "center" }}>Your Post</h1>
-            <PostBoard posts={UserPosts} users={users} tags={tags} edit={getActivePost}></PostBoard>
+            <PostBoard posts={userPosts} users={users} tags={tags} edit={getActivePost}></PostBoard>
         </Fragment>
     )
 }

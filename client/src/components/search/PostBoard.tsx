@@ -50,7 +50,5 @@ const PostBoard: React.FC<Props> = ({ users, tags, posts, filtr, edit }) => {
     }
 
     return (<div>{listPosts()}</div>)
-    //How call edit function 
-    //<Post post={posts[0]} tags={tags} users={users} edit={() => console.log("Edit")}/>
 };
 export default PostBoard

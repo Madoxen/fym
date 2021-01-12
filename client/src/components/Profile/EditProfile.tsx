@@ -1,5 +1,7 @@
 import React, { Fragment } from 'react'
 import { FormControl, FormGroup, FormLabel, Button } from 'react-bootstrap'
+import { useSelector } from 'react-redux';
+import { getAccessToken } from '../../features/auth/selectors';
 import { IUser, ITags, IUserPOST } from '../props/Interfaces'
 import TagPanel from '../tags/TagPanel'
 
@@ -9,26 +11,41 @@ interface Props {
 }
 const EditProfile: React.FC<Props> = ({ user, tags }) => {
 
+    const acc = useSelector(getAccessToken);
+
     const UserPOST: IUserPOST = {
         profileDescription: user.profiledescription,
         visibleName: "",
         telephone: user.phone,
         contactEmail: user.email,
-        tagIDs: []
+        tagids: user.tagids
     }
 
-    //TODO SEND User :)
     const SendChanges = (): void => {
-        console.log(UserPOST)
+        console.log(acc);
+         //fetch some posts and users
+         fetch(process.env.REACT_APP_API_URL + '/users/' + user.username, {
+            method: 'POST',
+            body: JSON.stringify(UserPOST),
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json; charset=UTF-8',
+                Authorization: 'Bearer ' + acc
+            },
+        })
+            .then((r) => r.json())
+            .then((r) => {
+                //handle success
+            })
+            .catch((e) => {
+                //handle failure
+            })
     }
 
     const getActiveTags: Function = (tags: ITags[]): void => {
-        var ids: number[] = []
-
-        tags.map(tag => {
-            ids.push(tag.tagid)
-        })
-        UserPOST.tagIDs = ids
+        let ids = tags.map(tag => tag.tagid)
+        UserPOST.tagids = ids
+        console.log(UserPOST.tagids)
     }
 
     return (
@@ -36,7 +53,7 @@ const EditProfile: React.FC<Props> = ({ user, tags }) => {
             <div className="edit-profile">
                 <FormGroup>
                     <FormLabel> Your tags</FormLabel>
-                    <TagPanel tags={tags} updateTags={getActiveTags}></TagPanel>
+                    <TagPanel tags={tags} updateTags={getActiveTags} active={UserPOST.tagids}></TagPanel>
                 </FormGroup>
                 <FormGroup>
                     <FormLabel>Email</FormLabel>

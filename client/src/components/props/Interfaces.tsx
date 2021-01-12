@@ -1,6 +1,6 @@
 export interface IPost {
     postid: number;
-    userid: number;
+    username: string;
     content: string;
     title: string;
     tagids: number[];
@@ -15,8 +15,7 @@ export interface ITagBox {
     active: boolean;
 }
 export interface IUser {
-    userid: number;
-    accountid: number;
+    username: string;
     profiledescription: string;
     phone: string;
     email: string;
@@ -27,7 +26,7 @@ export interface IUserPOST {
     visibleName: string,
     telephone: string,
     contactEmail: string,
-    tagIDs: number[]
+    tagids: number[]
 }
 export interface IPostPOST {
     content: string,

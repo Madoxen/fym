@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 interface Props {
     tags: ITags[];
     updateTags: Function;
-    active?: ITags[];
+    active?: number[];
 }
 
 const TagPanel: React.FC<Props> = ({tags,updateTags,active}) => {
@@ -19,7 +19,7 @@ const TagPanel: React.FC<Props> = ({tags,updateTags,active}) => {
     {
         if(active === undefined) return false;
         let isActive = false;
-        active.forEach(activeTag => activeTag.tagid === tag.tagid ? isActive = true : null);
+        active.forEach(activeTag => activeTag === tag.tagid ? isActive = true : null);
         return isActive;
     }
 

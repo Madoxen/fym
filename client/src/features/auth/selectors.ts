@@ -1,4 +1,6 @@
 import { AuthTokensState } from './types'
 
-export const getAccessToken = (state: AuthTokensState) => state.accessToken
-export const getRefreshToken = (state: AuthTokensState) => state.refreshToken
+export const getAccessToken = (state: any): string => state.authTokens.accessToken
+export const getRefreshToken = (state: any): string => state.authTokens.refreshToken
+export const getAccessTokenExp = (state: any): string => state.authTokens.accessTimeout
+export const getRefreshTokenExp = (state: any): string => state.authTokens.refreshTimeout

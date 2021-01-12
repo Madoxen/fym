@@ -6,7 +6,9 @@ import UserAccount from "../models/userAccount";
 
 
 interface IFindPostsQuery {
-    tags?: [];
+    tagids?: [];
+    start?: number;
+    limit?: number;
     author?: string;
 }
 
@@ -69,18 +71,30 @@ class PostController {
 
     findPosts = async (req: Request<{}, {}, {}, IFindPostsQuery>, res: Response) => {
 
-        let queryTags: string | string[] = req.query.tags as string | [];
+        let queryTags: string | string[] = req.query.tagids as string | [];
 
-        if (typeof (req.query.tags) === "string")
-            queryTags = [req.query.tags];
+        if (typeof (req.query.tagids) === "string")
+            queryTags = [req.query.tagids];
+
+
+        if (req.query.tagids === undefined)
+            req.query.tagids = [];
+
+        if (req.query.limit === undefined)
+            req.query.limit = 10;
+
+        if (req.query.start === undefined)
+            req.query.start = 0;
 
         try {
             //TODO: OFFSET AND LIMIT
-            let result = await db.query(`SELECT tagsposts.postid, array_agg(tagsposts.tagid) tagIDs, posts.content, posts.title, auth.username FROM tagsposts
-            INNER JOIN posts ON posts.postid = tagsposts.postid
+            let result = await db.query(`SELECT * FROM (SELECT posts.postid, array_agg(tagsposts.tagid) tagIDs, posts.content, posts.title, auth.username FROM tagsposts
+            RIGHT JOIN posts ON posts.postid = tagsposts.postid
             INNER JOIN userDetails ON userDetails.userid = posts.userid
             INNER JOIN auth ON auth.id = userDetails.accountid
-            WHERE tagsposts.postid = ANY(SELECT DISTINCT postid FROM tagsposts WHERE tagid = ANY ($1)) GROUP BY tagsposts.postid, posts.content, posts.title, auth.username;`, [queryTags]).then(res => res.rows);
+            GROUP BY posts.postid, posts.content, posts.title, auth.username) a 
+            WHERE a.tagIDs && $1 OR (array_length($1, 1) IS NULL AND a.tagIDs[0] IS NULL)
+            LIMIT $2 OFFSET $3`, [queryTags, req.query.limit, req.query.start]).then(res => res.rows);
             return res.status(200).json(result);
         }
         catch (e) {
@@ -91,11 +105,11 @@ class PostController {
 
     getPostsForUser = async (req: Request<{ username: string }>, res: Response) => {
         try {
-            let result = await db.query(`SELECT tagsposts.postid, array_agg(tagsposts.tagid) tagIDs, posts.content, posts.title, auth.username FROM tagsposts
-            INNER JOIN posts ON posts.postid = tagsposts.postid
+            let result = await db.query(`SELECT posts.postid, array_agg(tagsposts.tagid) tagIDs, posts.content, posts.title, auth.username FROM tagsposts
+            RIGHT JOIN posts ON posts.postid = tagsposts.postid
             INNER JOIN userDetails ON userDetails.userid = posts.userid
             INNER JOIN auth ON auth.id = userDetails.accountid
-            WHERE auth.username = $1 GROUP BY tagsposts.postid, posts.content, posts.title, auth.username;`, [req.params.username]).then(res => res.rows);
+            WHERE auth.username = $1 GROUP BY posts.postid, posts.content, posts.title, auth.username;`, [req.params.username]).then(res => res.rows);
             return res.status(200).json(result);
         }
         catch (e) {
