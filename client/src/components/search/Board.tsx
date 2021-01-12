@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import TagPanel from '../tags/TagPanel';
 import PostBoard from './PostBoard'
 import UserBoard from './UserBoard'
-import { ITags, IPost } from '../props/Interfaces'
+import { ITags, IPost, IUser } from '../props/Interfaces'
 import { Button, ButtonGroup } from 'react-bootstrap';
 import { http } from '../api/http';
 
@@ -11,9 +11,10 @@ const Board: React.FC = () => {
     const [searchMode, setSearchMode] = useState<boolean>(true);
     const [activeTags, setActiveTags] = useState<ITags[]>([]);
     const [tags, setTags] = useState<ITags[]>([]);
-    const [posts, setPosts] = useState([]);
-    const [users, setUsers] = useState([]);
+    const [posts, setPosts] = useState<IPost[]>([]);
+    const [users, setUsers] = useState<IUser[]>([]);
     const [postLimiter, setPostLimiter] = useState(0);
+    const [userLimiter, setUserLimiter] = useState(0);
 
     useEffect(() => {
         fetchData();
@@ -22,9 +23,10 @@ const Board: React.FC = () => {
     const fetchData = async () => {
 
         fetchFunction('/tags', setTags);
-        fetchFunction('/users', setUsers);
-        let posturl = `/posts?start=${postLimiter}&limit=1`
-        fetchFunction(posturl, setPosts);
+        fetchFunction(`/users?start=${userLimiter}&limit=1`, setUsers);
+        fetchFunction(`/posts?start=${postLimiter}&limit=1`, setPosts);
+        setPostLimiter(postLimiter+1);
+        setUserLimiter(userLimiter+1);
     }
 
     const fetchFunction = (url:string, setFun:Function) => 
@@ -45,10 +47,26 @@ const Board: React.FC = () => {
         setActiveTags(tags);
     }
 
+    const addPosts = (r:any) => {
+        let arr:IPost[] = [...posts,...r];
+        setPosts(arr);
+    }
+    const addUsers = (r:any) => {
+        let arr:IUser[] = [...users,...r];
+        setUsers(arr);
+    }
+
+
     const showMore = () => 
     {
-        setPostLimiter(postLimiter+1);
-        fetchData();
+        if(searchMode)
+        {
+            fetchFunction(`/posts?start=${postLimiter}&limit=1`, addPosts);
+            setPostLimiter(postLimiter+1);
+        }else{
+            fetchFunction(`/users?start=${userLimiter}&limit=1`, addUsers);
+            setUserLimiter(userLimiter+1);
+        }
     }
 
     return (
@@ -63,7 +81,10 @@ const Board: React.FC = () => {
                     ? <PostBoard users={users} tags={tags} posts={posts} filtr={activeTags} edit={(post: IPost) => console.log(`${post.title}`)} />
                     : <UserBoard users={users} tags={tags} filtr={activeTags} />
             }
-            <Button onClick={showMore} onMouseDown={(e) => e.preventDefault()}>Show More</Button>
+            <div className="d-flex justify-content-center">
+                <Button  onClick={showMore} onMouseDown={(e) => e.preventDefault()}>Show More</Button>
+            </div>
+            
 
         </div>
     )
