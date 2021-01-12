@@ -17,7 +17,6 @@ const App: React.FC = () => {
           <Route path="/" component={Home} exact />
           <Route path="/profile" component={Profile} />
           <Route path="/addPost" component={AddPost} />
-
           <Route path="/register" component={Register} />
           <Route path="/login" component={Login} />
           <Route path="/editPost" component={EditPost} />

@@ -1,12 +1,17 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import { FormGroup, FormLabel, FormControl, Button } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { ILoginPOST } from '../components/props/Interfaces'
 import { REPLACE_TOKENS } from '../features/auth/types'
 import { setUsername } from '../features/login/loginReducer'
+import { useHistory } from 'react-router-dom'
+
+//no correct login / password
 
 export const Login: React.FC = () => {
     const dispatch = useDispatch()
+    const history = useHistory()
+    const [loginSucces, setLoginSucces] = useState(true)
     const LoginPOST: ILoginPOST = {
         username: "",
         password: ""
@@ -29,6 +34,13 @@ export const Login: React.FC = () => {
                     tokens: { accessToken: r.acc, refreshToken: r.ref },
                 })
                 dispatch(setUsername(LoginPOST.username));
+                setLoginSucces(true)
+                history.push({
+                    pathname: '/profile',
+                })
+            })
+            .catch(() => {
+                setLoginSucces(false)
             })
     }
 
@@ -61,7 +73,7 @@ export const Login: React.FC = () => {
                         Log in
                     </Button>
                 </FormGroup>
-
+                {loginSucces ? null : <div style={{ color: "red", textAlign: "center" }} >Your username or password is incorrect !!</div>}
             </div>
         </Fragment>
     )
