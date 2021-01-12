@@ -3,6 +3,7 @@ import { Button, FormControl, FormGroup, FormLabel } from 'react-bootstrap'
 import TagPanel from '../components/tags/TagPanel'
 import { ITags, IPostPOST, IPost } from '../components/props/Interfaces'
 import { useLocation, useHistory } from 'react-router-dom'
+import { http } from '../components/api/http'
 
 interface Ilocal {
     post: IPost
@@ -14,27 +15,16 @@ export const EditPost: React.FC = () => {
     const [tags, setTags] = useState<ITags[]>([])
     //TAGS
     useEffect(() => {
-        async function getData() {
-            await fetch("https://api.fymate.co/tags")
-                .then((res) => res.json())
-                .then((data: ITags[]) => setTags(data));
-        }
-        getData();
-        console.log("TAGS")
-        console.log(tags)
-    }, [])
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        let tab: ITags[] = await http<ITags[]>("https://api.fymate.co/tags");
+        setTags(tab);
+        console.log(tags);
+    }
 
 
-    // const tags = [
-    //     {
-    //         "tagid": 1,
-    //         "name": "Programista"
-    //     },
-    //     {
-    //         "tagid": 2,
-    //         "name": "Grafik"
-    //     }
-    // ]
     //POST to POST HAAHAHAH
     const PostPOST: IPostPOST = {
         content: location.state.post.content,

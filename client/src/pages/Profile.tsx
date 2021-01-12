@@ -3,12 +3,13 @@ import EditProfile from '../components/Profile/EditProfile'
 import { IPost, ITags } from '../components/props/Interfaces'
 import PostBoard from '../components/search/PostBoard'
 import { useHistory } from 'react-router-dom'
-import { createAwait } from 'typescript'
+import { http } from '../components/api/http'
 
 
 export const Profile: React.FC = () => {
     let history = useHistory();
     //need current user 
+    //user
     const user = {
         "userid": 2,
         "accountid": 3,
@@ -31,21 +32,15 @@ export const Profile: React.FC = () => {
     const [tags, setTags] = useState<ITags[]>([])
     //TAGS
     useEffect(() => {
-        fetch("https://api.fymate.co/tags")
-            .then(response => response.json())
-            .then(json => setTags(json))
+        fetchData();
+    }, []);
 
-    }, [])
-    // const tags = [
-    //     {
-    //         "tagid": 1,
-    //         "name": "Programista"
-    //     },
-    //     {
-    //         "tagid": 2,
-    //         "name": "Grafik"
-    //     }
-    // ]
+    const fetchData = async () => {
+        let tab: ITags[] = await http<ITags[]>("https://api.fymate.co/tags");
+        setTags(tab);
+        console.log(tags);
+    }
+
     const UserPosts = [
         {
             "postid": 13,
