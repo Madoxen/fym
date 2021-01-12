@@ -13,8 +13,7 @@ export const Profile: React.FC = () => {
     const dispatch = useDispatch();
     const username = useSelector(getUsername);
     const [user, setUser] = useState({
-        "userid": 0,
-        "accountid": 0,
+        "username": "",
         "profiledescription": "",
         "phone": "",
         "email": "",

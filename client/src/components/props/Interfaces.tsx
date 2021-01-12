@@ -1,6 +1,6 @@
 export interface IPost {
     postid: number;
-    userid: number;
+    username: string;
     content: string;
     title: string;
     tagids: number[];

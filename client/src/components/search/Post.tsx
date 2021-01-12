@@ -17,7 +17,7 @@ const Post: React.FC<Props> = ({post,tags,users,edit}) => {
     const postUser: Function = (): JSX.Element[] => 
     {
         let userArray:JSX.Element[] = [];
-        users.forEach(user => user.userid === post.userid ? userArray.push(<span key={user.userid}> Email: {user.email} <br/> Phone: {user.phone} </span>): null);
+        users.forEach(user => user.username === post.username ? userArray.push(<span key={user.username}> Email: {user.email} <br/> Phone: {user.phone} </span>): null);
         return userArray;
     }
 
