@@ -30,7 +30,7 @@ class UserController {
             WHERE auth.username=$1
             GROUP BY auth.username, ud.profiledescription, ud.phone, ud.email LIMIT 1`, [req.params.username])).rows[0]
             if (result === undefined || result === null)
-                return res.status(404).send("Username not found" )
+                return res.status(404).send("Username not found")
 
 
             return res.status(200).json(result);
@@ -42,15 +42,26 @@ class UserController {
 
     getUsers = async (req: Request<{}, {}, {}, getUsersRequestQuery>, res: Response<IUserDetails[]>) => {
 
-        if(req.query.tagids === undefined)
+        if (typeof (req.query.tagids) === "string")
+            req.query.tagids = [req.query.tagids];
+
+
+        if (req.query.tagids === undefined)
             req.query.tagids = [];
 
-        let details = await db.query(`SELECT auth.username, ud.profiledescription, ud.phone, ud.email, array_agg(ut.tagid) tagids FROM userdetails ud
+        if (req.query.limit === undefined)
+            req.query.limit = 10;
+
+        if (req.query.start === undefined)
+            req.query.start = 0;
+
+ 
+        let details = await db.query(`SELECT * FROM (SELECT auth.username, ud.profiledescription, ud.phone, ud.email, array_agg(ut.tagid) tagids FROM userdetails ud
         INNER JOIN auth ON auth.id = ud.accountid
-        LEFT JOIN usertags ut ON ud.userid = ut.userid 
-        WHERE ut.userid = ANY(SELECT DISTINCT userid FROM usertags WHERE tagid = ANY ($1))
-        GROUP BY auth.username, ud.profiledescription, ud.phone, ud.email
-        LIMIT $2 OFFSET $3`, [req.query.tagids, req.query.limit, req.query.start]).then(r => r.rows);
+        LEFT JOIN usertags ut ON ud.userid = ut.userid
+        GROUP BY auth.username, ud.profiledescription, ud.phone, ud.email) a
+ WHERE a.tagids && $1 OR (array_length($1, 1) IS NULL AND a.tagids[0] IS NULL)
+LIMIT $2 OFFSET $3`, [req.query.tagids, req.query.limit, req.query.start]).then(r => r.rows);
 
         if (details !== null)
             return res.status(200).json(details);
@@ -68,8 +79,7 @@ class UserController {
             await client.query('BEGIN')
             //Insert new post
             let acc = await (await db.query("SELECT id FROM auth WHERE username=$1", [req.params.username])).rows[0]
-            if (acc === undefined || acc === null)
-            {
+            if (acc === undefined || acc === null) {
                 await client.query('ROLLBACK')
                 return res.status(404).send("Username not found")
             }
@@ -89,7 +99,7 @@ class UserController {
             throw e;
         } finally {
             client.release()
-        }  
+        }
     }
 }
 
