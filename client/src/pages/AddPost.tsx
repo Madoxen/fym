@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react'
 import { Button, FormControl, FormGroup, FormLabel } from 'react-bootstrap'
 import TagPanel from '../components/tags/TagPanel'
 import { ITags, IPostPOST } from '../components/props/Interfaces'
-import { http } from '../components/api/http'
+import { fetchFunction } from '../components/api/FetchFunction'
 
 export const AddPost: React.FC = () => {
     //TAGS
@@ -13,9 +13,7 @@ export const AddPost: React.FC = () => {
     }, []);
 
     const fetchData = async () => {
-        let tab: ITags[] = await http<ITags[]>("https://api.fymate.co/tags");
-        setTags(tab);
-        console.log(tags);
+        fetchFunction('/tags', setTags);
     }
 
     //POST to POST HAAHAHAH

@@ -3,7 +3,7 @@ import { Button, FormControl, FormGroup, FormLabel } from 'react-bootstrap'
 import TagPanel from '../components/tags/TagPanel'
 import { ITags, IPostPOST, IPost } from '../components/props/Interfaces'
 import { useLocation, useHistory } from 'react-router-dom'
-import { http } from '../components/api/http'
+import { fetchFunction } from '../components/api/FetchFunction'
 
 interface Ilocal {
     post: IPost
@@ -19,9 +19,7 @@ export const EditPost: React.FC = () => {
     }, []);
 
     const fetchData = async () => {
-        let tab: ITags[] = await http<ITags[]>("https://api.fymate.co/tags");
-        setTags(tab);
-        console.log(tags);
+        fetchFunction('/tags', setTags);
     }
 
 

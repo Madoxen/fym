@@ -61,7 +61,7 @@ const Board: React.FC = () => {
                 <Button variant={searchMode ? "secondary" : "primary"} onClick={() => setSearchMode(false)} onMouseDown={(e) => e.preventDefault()}>Users</Button>
                 <Button variant={searchMode ? "primary" : "secondary"} onClick={() => setSearchMode(true)} onMouseDown={(e) => e.preventDefault()}>Posts</Button>
             </ButtonGroup>
-            <TagPanel tags={tags} updateTags={getActiveTags} active={[1,2]} />
+            <TagPanel tags={tags} updateTags={getActiveTags} />
             {
                 searchMode
                     ? <PostBoard tags={tags} posts={posts} filtr={activeTags} edit={(post: IPost) => console.log(`${post.title}`)} />
