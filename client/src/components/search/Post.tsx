@@ -1,25 +1,23 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Card } from 'react-bootstrap'
 import { IPost,ITags,IUser } from '../props/Interfaces'
 import TagList from '../tags/TagList'
+import { fetchFunction } from '../api/FetchFunction';
 
 
 interface Props {
     post: IPost;
     tags: ITags[];
-    users: IUser[];
     edit?: Function;
 }
 
-const Post: React.FC<Props> = ({post,tags,users,edit}) => {
+const Post: React.FC<Props> = ({post,tags,edit}) => {
 
+    const [user, setUser] = useState<IUser>();
 
-    const postUser: Function = (): JSX.Element[] => 
-    {
-        let userArray:JSX.Element[] = [];
-        users.forEach(user => user.username === post.username ? userArray.push(<span key={user.username}> Email: {user.email} <br/> Phone: {user.phone} </span>): null);
-        return userArray;
-    }
+    useEffect(() => {
+        fetchFunction(`/users/${post.username}`, setUser);
+    }, []);
 
     return(
         <Card >
@@ -28,7 +26,7 @@ const Post: React.FC<Props> = ({post,tags,users,edit}) => {
                 <TagList tagids={post.tagids} tags={tags} />
                 <Card.Text className="mt-2">
                     {post.content}<br/>
-                    {postUser()}<br/>
+                    {user !== undefined ? <span > Email: {user.email} <br/> Phone: {user.phone} </span>:null}<br/>
                     {edit !== undefined ? <Button size="sm" onClick={() => edit(post)}>Edit</Button> : null}
                 </Card.Text>
             </Card.Body>

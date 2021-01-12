@@ -4,7 +4,7 @@ import PostBoard from './PostBoard'
 import UserBoard from './UserBoard'
 import { ITags, IPost, IUser } from '../props/Interfaces'
 import { Button, ButtonGroup } from 'react-bootstrap';
-import { http } from '../api/http';
+import { fetchFunction } from '../api/FetchFunction';
 
 const Board: React.FC = () => {
 
@@ -27,20 +27,6 @@ const Board: React.FC = () => {
         fetchFunction(`/posts?start=${postLimiter}&limit=1`, setPosts);
         setPostLimiter(postLimiter+1);
         setUserLimiter(userLimiter+1);
-    }
-
-    const fetchFunction = (url:string, setFun:Function) => 
-    {
-        fetch(process.env.REACT_APP_API_URL + url, {
-            headers: {
-                Accept: 'application/json',
-                'Content-type': 'application/json; charset=UTF-8',
-            },
-        })
-            .then((r) => r.json())
-            .then((r) => {
-                setFun(r)
-            })
     }
 
     const getActiveTags: Function = (tags: ITags[]): void => {
@@ -75,10 +61,10 @@ const Board: React.FC = () => {
                 <Button variant={searchMode ? "secondary" : "primary"} onClick={() => setSearchMode(false)} onMouseDown={(e) => e.preventDefault()}>Users</Button>
                 <Button variant={searchMode ? "primary" : "secondary"} onClick={() => setSearchMode(true)} onMouseDown={(e) => e.preventDefault()}>Posts</Button>
             </ButtonGroup>
-            <TagPanel tags={tags} updateTags={getActiveTags} active={[1,2]} />
+            <TagPanel tags={tags} updateTags={getActiveTags} />
             {
                 searchMode
-                    ? <PostBoard users={users} tags={tags} posts={posts} filtr={activeTags} edit={(post: IPost) => console.log(`${post.title}`)} />
+                    ? <PostBoard tags={tags} posts={posts} filtr={activeTags} edit={(post: IPost) => console.log(`${post.title}`)} />
                     : <UserBoard users={users} tags={tags} filtr={activeTags} />
             }
             <div className="d-flex justify-content-center">
