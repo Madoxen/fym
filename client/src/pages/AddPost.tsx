@@ -2,8 +2,15 @@ import React, { Fragment } from 'react'
 import { Button, FormControl, FormGroup, FormLabel } from 'react-bootstrap'
 import TagPanel from '../components/tags/TagPanel'
 import { ITags, IPostPOST } from '../components/props/Interfaces'
+import { useSelector } from 'react-redux'
+import { getAccessToken } from '../features/auth/selectors'
+import { getUsername } from '../features/login/loginReducer'
 
 export const AddPost: React.FC = () => {
+    const acc = useSelector(getAccessToken);
+    const username = useSelector(getUsername);
+
+
     //TAGS
     const tags = [
         {
@@ -33,7 +40,22 @@ export const AddPost: React.FC = () => {
 
     //TODO SEND Post :)
     const SendChanges = (): void => {
-        console.log(PostPOST)
+        fetch(process.env.REACT_APP_API_URL + '/posts/' + username, {
+            method: 'POST',
+            body: JSON.stringify(PostPOST),
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json; charset=UTF-8',
+                Authorization: 'Bearer ' + acc
+            },
+        })
+            .then((r) => r.json())
+            .then((r) => {
+                //handle success
+            })
+            .catch((e) => {
+                //handle failure
+            })
     }
 
     return (

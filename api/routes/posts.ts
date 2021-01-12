@@ -39,7 +39,7 @@ router.get("/:username",
 router.post("/:username", [param('username', 'Username must be a string').isString().escape(),
 body('content', 'Content must be a string').isString().escape(),
 body('title', 'Title must be a string').isString().escape(),
-body('tagIDs', 'tagIDs must be an array').isArray()],
+body('tagids', 'tagids must be an array').isArray()],
     ValidationMiddleware.onValidationChainEnd,
     controller.createPost)
 
@@ -49,7 +49,7 @@ router.patch("/:username/:postid",
     param('postid', 'Postid must be a number').isNumeric(),
     body('content', 'Content must be a string').isString().escape(),
     body('title', 'Title must be a string').isString().escape(),
-    body('tagIDs', 'tagIDs must be an array').isArray()],
+    body('tagids', 'tagids must be an array').isArray()],
     ValidationMiddleware.onValidationChainEnd)
 router.patch("/:username/:postid", controller.updatePost)
 

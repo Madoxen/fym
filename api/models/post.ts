@@ -8,7 +8,7 @@ export interface IPost {
     readonly id?: number
     content: string;
     title: string;
-    tagIDs: number[];
+    tagids: number[];
 }
 
 export class Post implements IPost {
@@ -16,7 +16,7 @@ export class Post implements IPost {
     readonly id: number;
     content: string = "";
     title: string = "";
-    tagIDs: number[] = [];
+    tagids: number[] = [];
 
     //We need to provide associated username for Post
     constructor(id: number) {
@@ -34,14 +34,14 @@ export class Post implements IPost {
                 [userID, p.content, p.title]).then(r => r.rows[0].postid);
             //Insert post tags
             const tagInsertTasks: Promise<any>[] = []
-            p.tagIDs.forEach(tagID => {
+            p.tagids.forEach(tagID => {
                 tagInsertTasks.push(client.query("INSERT INTO tagsposts(postid, tagid) VALUES ($1,$2)", [postID, tagID]))
             });
             await Promise.all(tagInsertTasks);
             await client.query('COMMIT')
             let result: Post = new Post(postID);
             result.content = p.content;
-            result.tagIDs = p.tagIDs;
+            result.tagids = p.tagids;
             result.title = p.title
             return result;
         } catch (e) {
@@ -66,15 +66,16 @@ export class Post implements IPost {
             //Delete all post tags
             await client.query("DELETE FROM tagsposts WHERE postid=$1", [p.id])
             //Insert post tags
+            console.log(p.tagids)
             const tagInsertTasks: Promise<any>[] = []
-            p.tagIDs.forEach(tagID => {
+            p.tagids.forEach(tagID => {
                 tagInsertTasks.push(client.query("INSERT INTO tagsposts(postid, tagid) VALUES ($1,$2)", [p.id, tagID]))
             });
             await Promise.all(tagInsertTasks);
             await client.query('COMMIT')
             let result: Post = new Post(p.id);
             result.content = p.content;
-            result.tagIDs = p.tagIDs;
+            result.tagids = p.tagids.filter(x => x != undefined && x != null);
             result.title = p.title
             return result;
         } catch (e) {

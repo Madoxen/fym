@@ -24,7 +24,7 @@ class UserController {
 
     getUser = async (req: Request<{ username: string }>, res: Response) => {
         if (req.params.username !== undefined) {
-            let result = await (await db.query(`SELECT auth.username, ud.profiledescription, ud.phone, ud.email, array_agg(tagid) tagIDs FROM userdetails ud
+            let result = await (await db.query(`SELECT auth.username, ud.profiledescription, ud.phone, ud.email, array_remove(array_agg(tagid), NULL) tagIDs FROM userdetails ud
             INNER JOIN auth ON auth.id = ud.accountid
             LEFT JOIN usertags ON ud.userid = usertags.userid
             WHERE auth.username=$1
@@ -56,7 +56,7 @@ class UserController {
             req.query.start = 0;
 
  
-        let details = await db.query(`SELECT * FROM (SELECT auth.username, ud.profiledescription, ud.phone, ud.email, array_agg(ut.tagid) tagids FROM userdetails ud
+        let details = await db.query(`SELECT * FROM (SELECT auth.username, ud.profiledescription, ud.phone, ud.email, array_remove(array_agg(ut.tagid), NULL) tagids FROM userdetails ud
         INNER JOIN auth ON auth.id = ud.accountid
         LEFT JOIN usertags ut ON ud.userid = ut.userid
         GROUP BY auth.username, ud.profiledescription, ud.phone, ud.email) a

@@ -3,6 +3,8 @@ import { Button, FormControl, FormGroup, FormLabel } from 'react-bootstrap'
 import TagPanel from '../components/tags/TagPanel'
 import { ITags, IPostPOST, IPost } from '../components/props/Interfaces'
 import { useLocation, useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { getAccessToken } from '../features/auth/selectors'
 
 interface Ilocal {
     post: IPost
@@ -11,6 +13,8 @@ interface Ilocal {
 export const EditPost: React.FC = () => {
     const location = useLocation<Ilocal>();
     const history = useHistory();
+    const acc = useSelector(getAccessToken);
+
     //TAGS
     const tags = [
         {
@@ -38,12 +42,31 @@ export const EditPost: React.FC = () => {
     }
 
     //TODO SEND Post :)
+   
     const SendChanges = (): void => {
         console.log(PostPOST)
         history.push({
             pathname: '/profile'
         })
+
+        fetch(process.env.REACT_APP_API_URL + '/posts/' + location.state.post.username + "/" + location.state.post.postid, {
+            method: 'PATCH',
+            body: JSON.stringify(PostPOST),
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json; charset=UTF-8',
+                Authorization: 'Bearer ' + acc
+            },
+        })
+            .then((r) => r.json())
+            .then((r) => {
+                //handle success
+            })
+            .catch((e) => {
+                //handle failure
+            })
     }
+
 
     const tagOfId: Function = (id: number): ITags => {
         let returnTag: ITags = {

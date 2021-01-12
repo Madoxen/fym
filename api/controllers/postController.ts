@@ -59,11 +59,12 @@ class PostController {
 
     updatePost = async (req: Request<{ username: string, postid: number }, IPost>, res: Response) => {
         try {
-            let p: IPost = { id: req.params.postid, content: req.body.content, title: req.body.title, tagIDs: req.body.tagIDs };
+            let p: IPost = { id: req.params.postid, content: req.body.content, title: req.body.title, tagids: req.body.tagids };
             await Post.update(p);
         }
-        catch
+        catch(e)
         {
+            console.log(e)
             return res.status(500).send("Could not insert a new post")
         }
         return res.status(200).send();
@@ -88,7 +89,7 @@ class PostController {
 
         try {
             //TODO: OFFSET AND LIMIT
-            let result = await db.query(`SELECT * FROM (SELECT posts.postid, array_agg(tagsposts.tagid) tagIDs, posts.content, posts.title, auth.username FROM tagsposts
+            let result = await db.query(`SELECT * FROM (SELECT posts.postid, array_remove(array_agg(tagsposts.tagid), NULL) tagIDs, posts.content, posts.title, auth.username FROM tagsposts
             RIGHT JOIN posts ON posts.postid = tagsposts.postid
             INNER JOIN userDetails ON userDetails.userid = posts.userid
             INNER JOIN auth ON auth.id = userDetails.accountid
@@ -105,7 +106,7 @@ class PostController {
 
     getPostsForUser = async (req: Request<{ username: string }>, res: Response) => {
         try {
-            let result = await db.query(`SELECT posts.postid, array_agg(tagsposts.tagid) tagIDs, posts.content, posts.title, auth.username FROM tagsposts
+            let result = await db.query(`SELECT posts.postid, array_remove(array_agg(tagsposts.tagid), NULL) tagIDs, posts.content, posts.title, auth.username FROM tagsposts
             RIGHT JOIN posts ON posts.postid = tagsposts.postid
             INNER JOIN userDetails ON userDetails.userid = posts.userid
             INNER JOIN auth ON auth.id = userDetails.accountid
