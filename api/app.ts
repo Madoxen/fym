@@ -9,9 +9,12 @@ import logger from 'morgan'
 import authRouter from './routes/auth'
 import indexRouter from './routes/index'
 import usersRouter from './routes/users'
+import postsRouter from './routes/posts'
+import tagsRouter from './routes/tags'
 import { Request, Response, NextFunction } from 'express';
 import db from './db';
 import dotenv from 'dotenv'
+
 
 if (process.env.NO_ENV === undefined || process.env.NO_ENV === null) {
   console.log("NO_ENV null or undefined, trying to load .env.local");
@@ -36,6 +39,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
+app.use('/posts', postsRouter);
+app.use('/tags', tagsRouter)
+app.get('/favicon.ico', (req, res) => res.status(204));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

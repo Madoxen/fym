@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 export const Navigation: React.FC = () => (
   <Navbar bg="primary" variant="dark">
-    <Navbar.Brand href="#home">Navbar</Navbar.Brand>
+    <Navbar.Brand href="/">Fymate.co</Navbar.Brand>
     <Nav className="mr-auto">
       <NavItem>
         {' '}
@@ -15,16 +15,28 @@ export const Navigation: React.FC = () => (
       </NavItem>
       <NavItem>
         {' '}
-        <Link className="nav-link" to="/about">
-          About
+        <Link className="nav-link" to="/profile">
+          Profile
         </Link>{' '}
       </NavItem>
       <NavItem>
         {' '}
-        <Link className="nav-link" to="/register">
-          Register
+        <Link className="nav-link" to="/addPost">
+          AddPost
+        </Link>{' '}
+      </NavItem>
+      <NavItem>
+        {' '}
+        <Link className="nav-link" to="/login">
+          Log in
         </Link>{' '}
       </NavItem>
     </Nav>
+    <NavItem>
+      {' '}
+      <Link className="nav-link" to="/register">
+        Register
+        </Link>{' '}
+    </NavItem>
   </Navbar>
 )
