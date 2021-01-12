@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 import { FormGroup, FormLabel, FormControl, Button } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { ILoginPOST } from '../components/props/Interfaces'
+import { REPLACE_TOKENS } from '../features/auth/types'
 import { setUsername } from '../features/login/loginReducer'
 
 export const Login: React.FC = () => {
@@ -10,9 +11,25 @@ export const Login: React.FC = () => {
         username: "",
         password: ""
     }
+
     const SendChanges = (): void => {
-        console.log(LoginPOST)
-        dispatch(setUsername(LoginPOST.username));
+
+        fetch(process.env.REACT_APP_API_URL + '/auth/login', {
+            method: 'POST',
+            body: JSON.stringify(LoginPOST),
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+        })
+            .then((r) => r.json())
+            .then((r) => {
+                dispatch({
+                    type: REPLACE_TOKENS,
+                    tokens: { accessToken: r.acc, refreshToken: r.ref },
+                })
+                dispatch(setUsername(LoginPOST.username));
+            })
     }
 
     return (
