@@ -17,7 +17,7 @@ const store = createStore(
   /* preloadedState, */ devToolsEnhancer({})
 )
 
-
+//Automatically refreshed the token
 let oldTokens: any = undefined;
 let timeoutID: NodeJS.Timeout;
 store.subscribe(() => {

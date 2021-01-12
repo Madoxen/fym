@@ -9,6 +9,11 @@ interface ISetUsername{
     type: typeof SET_USERNAME
     username: string;
 }
+
+interface IUsernameState
+{
+    username: string;
+}
 export type LoginActionTypes = ISetUsername 
 
 
@@ -30,4 +35,4 @@ export function setUsername(name: string): ISetUsername {
     }
 }
 
-export const getAccessToken = (state: ISetUsername) => state.username
+export const getUsername = (state: any) => state.username.username
