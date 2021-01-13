@@ -2,19 +2,22 @@ import React, { useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { REPLACE_TOKENS } from '../features/auth/types'
+import { useHistory } from 'react-router-dom'
 
 export const Register: React.FC = () => {
     const [email, setEmail] = useState('')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [passwordConfirm, setPasswordConfirm] = useState('')
+    const [succesRegister, setSuccesRegister] = useState<boolean>(true)
     const dispatch = useDispatch()
+    const history = useHistory()
 
     const onFormSubmit = (e: any) => {
         e.preventDefault()
         // TODO Validate
-        if (password === '' || username === '' || passwordConfirm === '') {
-            console.log('BAD !!')
+        if (password === '' || username === '' || passwordConfirm === '' || passwordConfirm !== password) {
+            setSuccesRegister(false)
         } else {
             fetch(process.env.REACT_APP_API_URL + '/auth/register/', {
                 method: 'POST',
@@ -30,12 +33,19 @@ export const Register: React.FC = () => {
                 mode: 'cors'
             })
                 .then((r) => r.json())
-                .then((r) =>
+                .then((r) => {
                     dispatch({
                         type: REPLACE_TOKENS,
                         tokens: { accessToken: r.acc, refreshToken: r.ref },
                     })
-                )
+                    setSuccesRegister(true)
+                    history.push({
+                        pathname: '/login',
+                    })
+                })
+                .catch(() => {
+                    setSuccesRegister(false)
+                })
         }
     }
 
@@ -54,6 +64,7 @@ export const Register: React.FC = () => {
                 <Form.Label>Username</Form.Label>
                 <Form.Control
                     type="text"
+                    required
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder="username"
                 />
@@ -63,6 +74,7 @@ export const Register: React.FC = () => {
                 <Form.Label>Password</Form.Label>
                 <Form.Control
                     type="password"
+                    required
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Password"
                 />
@@ -72,6 +84,7 @@ export const Register: React.FC = () => {
                 <Form.Label>Confirm password</Form.Label>
                 <Form.Control
                     type="password"
+                    required
                     onChange={(e) => setPasswordConfirm(e.target.value)}
                     placeholder="Confirm password"
                 />
@@ -80,6 +93,10 @@ export const Register: React.FC = () => {
             <Button variant="primary" type="submit">
                 Create account
       </Button>
+            {succesRegister ? null :
+                <div style={{ color: "red", textAlign: "center" }} >
+                    Incorect form
+          </div>}
         </Form>
     )
 }
