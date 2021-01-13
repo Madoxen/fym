@@ -13,8 +13,6 @@ const JWT_REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_TOKEN_SECRET;
 const JWT_ACCESS_TOKEN_TTL = process.env.JWT_ACCESS_TOKEN_TTL;
 const JWT_REFRESH_TOKEN_TTL = process.env.JWT_REFRESH_TOKEN_TTL;
 
-
-
 export interface ILoginPOST {
       username: string,
       password: string
@@ -30,21 +28,25 @@ class AuthController {
       }
 
       registerNewUser = async (req: Request, res: Response) => {
-
-            //Hash password
-            const salt = await bcrypt.genSalt(10);
-            const pass_hash = await bcrypt.hash(req.body.password, salt);
-
-            let existing = await (await db.query("SELECT * FROM auth WHERE username=$1", [req.body.username])).rows[0]
-            if (existing !== undefined && existing !== null) { //If exists user with username
-                  return res.status(409).send("Account with given username already exists"); //Send 409 (conflict) because we cannot create user with the same username as existing user
-            }
-
-            //create new user
-            let u = new UserAccount(req.body.username, req.body.email, pass_hash);
-
             try //try push to database
             {
+                  //Hash password
+                  const salt = await bcrypt.genSalt(10);
+                  const pass_hash = await bcrypt.hash(req.body.password, salt);
+
+                  let existing = await (await db.query("SELECT * FROM auth WHERE username=$1", [req.body.username])).rows[0]
+                  if (existing !== undefined && existing !== null) { //If exists user with username
+                        return res.status(409).send("Account with given username already exists"); //Send 409 (conflict) because we cannot create user with the same username as existing user
+                  }
+
+                  existing = await (await db.query("SELECT * FROM auth WHERE email=$1", [req.body.email])).rows[0]
+                  if (existing !== undefined && existing !== null) { //If exists user with username
+                        return res.status(409).send("Account with given email already exists"); //Send 409 (conflict) because we cannot create user with the same username as existing user
+                  }
+
+                  //create new user
+                  let u = new UserAccount(req.body.username, req.body.email, pass_hash);
+
                   let acc = await UserAccount.insert(u); //wait for DB
                   if (acc?.id === undefined)
                         return res.status(500).send();
