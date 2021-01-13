@@ -5,11 +5,12 @@ import Post from './Post'
 interface Props {
     posts: IPost[];
     filtr?: ITags[];
+    user?: IUser;
     edit?: Function;
     del?: Function;
 }
 
-const PostBoard: React.FC<Props> = ({posts, filtr, edit, del }) => {
+const PostBoard: React.FC<Props> = ({posts, filtr, user, edit, del }) => {
 
     const listPosts: Function = (): JSX.Element[] => {
         let postArr: IPost[] = []
@@ -25,7 +26,7 @@ const PostBoard: React.FC<Props> = ({posts, filtr, edit, del }) => {
         else {
             posts.forEach(post => postArr.push(post));
         }
-        postArr.forEach(post => postJSX.push(<Post key={post.postid} post={post} edit={edit} del={del}/>));
+        postArr.forEach(post => postJSX.push(<Post key={post.postid} post={post} usr={user} edit={edit} del={del}/>));
         return postJSX;
     }
 

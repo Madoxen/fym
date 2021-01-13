@@ -7,16 +7,19 @@ import { fetchFunction } from '../api/FetchFunction';
 
 interface Props {
     post: IPost;
+    usr?: IUser;
     edit?: Function;
     del?: Function;
 }
 
-const Post: React.FC<Props> = ({ post, edit, del }) => {
+const Post: React.FC<Props> = ({ post, usr, edit, del }) => {
 
-    const [user, setUser] = useState<IUser>();
+    const [user, setUser] = useState<IUser | undefined>(usr);
 
     useEffect(() => {
-        fetchFunction(`/users/${post.username}`, setUser);
+        console.log(user);
+        if(usr === undefined)
+            fetchFunction(`/users/${post.username}`, setUser);
     }, []);
 
     return (
