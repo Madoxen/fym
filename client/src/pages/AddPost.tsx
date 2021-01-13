@@ -6,11 +6,12 @@ import { useSelector } from 'react-redux'
 import { getAccessToken } from '../features/auth/selectors'
 import { getUsername } from '../features/login/loginReducer'
 import { fetchFunction } from '../components/api/FetchFunction'
+import { useHistory } from 'react-router-dom'
 
 export const AddPost: React.FC = () => {
     const acc = useSelector(getAccessToken);
     const username = useSelector(getUsername);
-
+    const history = useHistory();
 
     //TAGS
     const [tags, setTags] = useState<ITags[]>([])
@@ -53,6 +54,9 @@ export const AddPost: React.FC = () => {
             .then((r) => r.json())
             .then((r) => {
                 //handle success
+                history.push({
+                    pathname: "/profile"
+                })
             })
             .catch((e) => {
                 //handle failure

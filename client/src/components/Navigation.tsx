@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 export const Navigation: React.FC = () => (
   <Navbar collapseOnSelect expand="sm" bg="primary" variant="dark">
-    <Navbar.Brand href="/">Fymate.co</Navbar.Brand>
+    <Navbar.Brand><Link to="/" >Fymate.co</Link></Navbar.Brand>
     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
     <Navbar.Collapse id="responsive-navbar-nav">
       <Nav className="mr-auto">
