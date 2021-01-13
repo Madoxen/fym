@@ -23,7 +23,6 @@ export const Profile: React.FC = () => {
     const [userPosts, setUserPosts] = useState<IPost[]>([]);
     const acc = useSelector(getAccessToken);
 
-
     useEffect(() => {
         //Fetch on mount
         fetch(process.env.REACT_APP_API_URL + '/users/' + username, {
@@ -52,10 +51,6 @@ export const Profile: React.FC = () => {
     }, [])  // <-- add this empty array here
 
 
-    useEffect(() => {
-        setUserPosts(userPosts);
-      }, [userPosts]);
-
     const users = [
         user
     ]
@@ -79,23 +74,25 @@ export const Profile: React.FC = () => {
             },
         })
             .then((r) => {
-                console.log(r.status)
                 if (r.ok) {
-                    return r.json();
+                    return r
                 }
                 else {
                     throw r.statusText
                 }
             })
             .then((r) =>
-                //200 received, body transpiled to object
-                { 
-                    
+            //200 received, body transpiled to object
+            {
+                const index = userPosts.findIndex(x => x.postid === post.postid);
+                if (index > -1) {
+                    userPosts.splice(index, 1)
+                    setUserPosts([...userPosts]);
                 }
-            )
+            })
             .catch(
                 //failure like CORS or other exceptions
-                r => { })
+                e => { console.log(e) })
     }
 
     return (
