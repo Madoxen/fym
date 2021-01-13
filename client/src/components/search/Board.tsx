@@ -16,15 +16,17 @@ const Board: React.FC = () => {
     const [userOffset, setUserOffset] = useState(0);
 
     useEffect(() => {
+        const fetchData = async () => {
+            fetchFunction(`/users?start=${userOffset}&limit=1`, setUsers);
+            fetchFunction(`/posts?start=${postOffset}&limit=1`, setPosts);
+            setPostOffset(postOffset + 1);
+            setUserOffset(userOffset + 1);
+        }
+
         fetchData();
     }, []);
 
-    const fetchData = async () => {
-        fetchFunction(`/users?start=${userOffset}&limit=1`, setUsers);
-        fetchFunction(`/posts?start=${postOffset}&limit=1`, setPosts);
-        setPostOffset(postOffset + 1);
-        setUserOffset(userOffset + 1);
-    }
+
 
     const getActiveTags: Function = (tags: ITags[]): void => {
         setActiveTags(tags);

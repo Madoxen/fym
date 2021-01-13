@@ -50,18 +50,12 @@ export const Profile: React.FC = () => {
         return () => console.log('unmounting...');
     }, [])  // <-- add this empty array here
 
-
-    const users = [
-        user
-    ]
-
     const getActivePost: Function = (post: IPost): void => {
         history.push({
             pathname: '/editPost',
             state: { post: post }
         })
     }
-
 
     const deletePost: Function = (post: IPost): void => {
 

@@ -1,6 +1,4 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { getTags } from '../../features/tags/tagsReducer'
 import { IUser, ITags } from '../props/Interfaces'
 import UserCard from './UserCard'
 

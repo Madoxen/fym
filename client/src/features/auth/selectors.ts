@@ -1,4 +1,3 @@
-import { AuthTokensState } from './types'
 
 export const getAccessToken = (state: any): string => state.authTokens.accessToken
 export const getRefreshToken = (state: any): string => state.authTokens.refreshToken

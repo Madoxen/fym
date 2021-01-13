@@ -1,19 +1,15 @@
 import React from 'react'
 import { Card } from 'react-bootstrap'
-import { useSelector } from 'react-redux';
-import { getTags } from '../../features/tags/tagsReducer';
-import { ITags,IUser } from '../props/Interfaces'
+import { IUser } from '../props/Interfaces'
 import TagList from '../tags/TagList'
 
 interface Props {
     user: IUser;
 }
 
-const UserCard: React.FC<Props> = ({user}) => {
+const UserCard: React.FC<Props> = ({ user }) => {
 
-    const tags = useSelector(getTags);
-
-    return(
+    return (
         <Card >
             <Card.Body>
                 <Card.Title>{user.username}</Card.Title>
