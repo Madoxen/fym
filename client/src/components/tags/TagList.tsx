@@ -2,7 +2,6 @@ import React from 'react'
 import { Badge } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { getTags } from '../../features/tags/tagsReducer';
-import { ITags } from '../props/Interfaces'
 
 interface Props {
     tagids: number[];

@@ -11,12 +11,9 @@ interface IReplaceTags {
     tags: ITags[];
 }
 
-interface ITagsState {
-    tags: ITags[];
-}
 
 export type TagsActionTypes = IReplaceTags
-export const getTags = (state: any) : ITags[] => state.tags.tags
+export const getTags = (state: any): ITags[] => state.tags.tags
 
 export function replaceTags(tags: ITags[]): IReplaceTags {
     return {

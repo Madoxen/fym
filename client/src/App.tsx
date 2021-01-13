@@ -23,7 +23,6 @@ const App: React.FC = () => {
 
 
   fetch(process.env.REACT_APP_API_URL + "/tags").then(r => {
-    console.log(r.status);
     if (r.ok) {
       return r.json()
     }

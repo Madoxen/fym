@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Nav, Navbar, NavDropdown, NavItem } from 'react-bootstrap'
+import { Nav, Navbar } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'

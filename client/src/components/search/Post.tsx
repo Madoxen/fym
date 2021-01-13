@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Card } from 'react-bootstrap'
-import { IPost, ITags, IUser } from '../props/Interfaces'
+import { IPost, IUser } from '../props/Interfaces'
 import TagList from '../tags/TagList'
 import { fetchFunction } from '../api/FetchFunction';
 

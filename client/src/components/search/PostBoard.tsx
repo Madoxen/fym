@@ -1,5 +1,5 @@
 import React from 'react'
-import { IPost, ITags, IUser } from '../props/Interfaces'
+import { IPost, ITags } from '../props/Interfaces'
 import Post from './Post'
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
     del?: Function;
 }
 
-const PostBoard: React.FC<Props> = ({posts, filtr, edit, del }) => {
+const PostBoard: React.FC<Props> = ({ posts, filtr, edit, del }) => {
 
     const listPosts: Function = (): JSX.Element[] => {
         let postArr: IPost[] = []
@@ -25,7 +25,7 @@ const PostBoard: React.FC<Props> = ({posts, filtr, edit, del }) => {
         else {
             posts.forEach(post => postArr.push(post));
         }
-        postArr.forEach(post => postJSX.push(<Post key={post.postid} post={post} edit={edit} del={del}/>));
+        postArr.forEach(post => postJSX.push(<Post key={post.postid} post={post} edit={edit} del={del} />));
         return postJSX;
     }
 

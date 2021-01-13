@@ -1,11 +1,10 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment } from 'react'
 import { Button, FormControl, FormGroup, FormLabel } from 'react-bootstrap'
 import TagPanel from '../components/tags/TagPanel'
 import { ITags, IPostPOST } from '../components/props/Interfaces'
 import { useSelector } from 'react-redux'
 import { getAccessToken } from '../features/auth/selectors'
 import { getUsername } from '../features/login/loginReducer'
-import { fetchFunction } from '../components/api/FetchFunction'
 import { useHistory } from 'react-router-dom'
 
 export const AddPost: React.FC = () => {
