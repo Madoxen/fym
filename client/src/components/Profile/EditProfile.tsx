@@ -22,8 +22,8 @@ const EditProfile: React.FC<Props> = ({ user }) => {
 
     const SendChanges = (): void => {
         console.log(acc);
-         //fetch some posts and users
-         fetch(process.env.REACT_APP_API_URL + '/users/' + user.username, {
+        //fetch some posts and users
+        fetch(process.env.REACT_APP_API_URL + '/users/' + user.username, {
             method: 'POST',
             body: JSON.stringify(UserPOST),
             headers: {
@@ -75,7 +75,6 @@ const EditProfile: React.FC<Props> = ({ user }) => {
                 </FormGroup>
                 <FormGroup>
                     <FormLabel>Description</FormLabel>
-                    <FormLabel>Telephone</FormLabel>
                     <FormControl
                         type="text"
                         placeholder={user.profiledescription}

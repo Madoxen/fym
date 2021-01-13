@@ -12,9 +12,12 @@ export const Login: React.FC = () => {
     const dispatch = useDispatch()
     const history = useHistory()
     const [loginSucces, setLoginSucces] = useState(true)
+    const [usernameLogin, setUsernameLogin] = useState("")
+    const [password, setPassword] = useState("")
+    const [errMessage, setErrMessage] = useState("")
     const LoginPOST: ILoginPOST = {
-        username: "",
-        password: ""
+        username: usernameLogin,
+        password: password
     }
 
     const SendChanges = (): void => {
@@ -27,7 +30,14 @@ export const Login: React.FC = () => {
                 'Content-type': 'application/json; charset=UTF-8',
             },
         })
-            .then((r) => r.json())
+            .then(async (r) => {
+                if (!r.ok) {
+                    let er = ""
+                    er = await r.text()
+                    throw er
+                }
+                return r.json()
+            })
             .then((r) => {
                 dispatch({
                     type: REPLACE_TOKENS,
@@ -39,7 +49,8 @@ export const Login: React.FC = () => {
                     pathname: '/profile',
                 })
             })
-            .catch(() => {
+            .catch((e) => {
+                setErrMessage(e)
                 setLoginSucces(false)
             })
     }
@@ -51,7 +62,7 @@ export const Login: React.FC = () => {
                     <FormLabel>User name</FormLabel>
                     <FormControl
                         type="text"
-                        onChange={e => LoginPOST.username = e.target.value}
+                        onChange={(e) => setUsernameLogin(e.target.value)}
                     ></FormControl>
 
                 </FormGroup>
@@ -59,7 +70,7 @@ export const Login: React.FC = () => {
                     <FormLabel>Password</FormLabel>
                     <FormControl
                         type="password"
-                        onChange={e => LoginPOST.password = e.target.value}
+                        onChange={(e) => setPassword(e.target.value)}
                     >
 
                     </FormControl>
@@ -75,7 +86,7 @@ export const Login: React.FC = () => {
                 </FormGroup>
                 {loginSucces ? null :
                     <div style={{ color: "red", textAlign: "center" }} >
-                        Your username or password is incorrect !!</div>}
+                        {errMessage}</div>}
             </div>
         </Fragment>
     )

@@ -9,6 +9,7 @@ export const Register: React.FC = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [passwordConfirm, setPasswordConfirm] = useState('')
+    const [errMessage, setErrMessage] = useState("")
     const [succesRegister, setSuccesRegister] = useState<boolean>(true)
     const dispatch = useDispatch()
     const history = useHistory()
@@ -32,7 +33,14 @@ export const Register: React.FC = () => {
                 },
                 mode: 'cors'
             })
-                .then((r) => r.json())
+                .then(async (r) => {
+                    if (!r.ok) {
+                        let er = ""
+                        er = await r.text()
+                        throw er
+                    }
+                    return r.json()
+                })
                 .then((r) => {
                     dispatch({
                         type: REPLACE_TOKENS,
@@ -43,7 +51,8 @@ export const Register: React.FC = () => {
                         pathname: '/login',
                     })
                 })
-                .catch(() => {
+                .catch((e) => {
+                    setErrMessage(e)
                     setSuccesRegister(false)
                 })
         }
@@ -95,8 +104,8 @@ export const Register: React.FC = () => {
       </Button>
             {succesRegister ? null :
                 <div style={{ color: "red", textAlign: "center" }} >
-                    Incorect form
-          </div>}
+                    {errMessage}
+                </div>}
         </Form>
     )
 }
