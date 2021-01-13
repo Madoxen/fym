@@ -94,7 +94,7 @@ export const Profile: React.FC = () => {
             <h1 style={{ textAlign: "center" }}>Edit Your Profile</h1>
             <EditProfile user={user}></EditProfile>
             <h1 style={{ textAlign: "center" }}>Your Post</h1>
-            <PostBoard posts={userPosts} edit={getActivePost} del={deletePost}></PostBoard>
+            <PostBoard user={user} posts={userPosts} edit={getActivePost} del={deletePost}></PostBoard>
         </Fragment>
     )
 }
