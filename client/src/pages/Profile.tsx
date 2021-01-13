@@ -47,7 +47,6 @@ export const Profile: React.FC = () => {
                 setUserPosts(r)
             )
 
-        return () => console.log('unmounting...');
     }, [])  // <-- add this empty array here
 
     const getActivePost: Function = (post: IPost): void => {
@@ -84,9 +83,8 @@ export const Profile: React.FC = () => {
                     setUserPosts([...userPosts]);
                 }
             })
-            .catch(
+            .catch(() => {})
                 //failure like CORS or other exceptions
-                e => { console.log(e) })
     }
 
     return (

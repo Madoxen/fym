@@ -17,7 +17,6 @@ const Post: React.FC<Props> = ({ post, usr, edit, del }) => {
     const [user, setUser] = useState<IUser | undefined>(usr);
 
     useEffect(() => {
-        console.log(user);
         if(usr === undefined)
             fetchFunction(`/users/${post.username}`, setUser);
     }, []);
