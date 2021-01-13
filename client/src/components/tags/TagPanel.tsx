@@ -2,14 +2,17 @@ import React, {useEffect, useState} from 'react'
 import { ITagBox,ITags } from '../props/Interfaces'
 import { Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { useSelector } from 'react-redux';
+import { getTags } from '../../features/tags/tagsReducer';
 
 interface Props {
-    tags: ITags[];
     updateTags: Function;
     active?: number[];
 }
 
-const TagPanel: React.FC<Props> = ({tags,updateTags,active}) => {
+const TagPanel: React.FC<Props> = ({updateTags,active}) => {
+
+    const tags = useSelector(getTags);
 
     useEffect(() => {
         setTagBoxes(assignTags());

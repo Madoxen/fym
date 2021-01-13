@@ -4,12 +4,14 @@ import { CounterReducer } from './features/counter'
 import TokenReducer from './features/auth/reducers'
 import { REPLACE_TOKENS } from './features/auth/types'
 import UsernameReducer from './features/login/loginReducer'
+import tagsReducer from './features/tags/tagsReducer'
 
 /* Create root reducer, containing all features of the application */
 const rootReducer = combineReducers({
   count: CounterReducer,
   authTokens: TokenReducer,
-  username: UsernameReducer
+  username: UsernameReducer,
+  tags: tagsReducer
 })
 
 const store = createStore(
