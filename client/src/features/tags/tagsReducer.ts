@@ -22,7 +22,7 @@ export function replaceTags(tags: ITags[]): IReplaceTags {
     }
 }
 
-export default (state = initialState, action: TagsActionTypes) => {
+const r = (state = initialState, action: TagsActionTypes) => {
     if (action.type === REPLACE_TAGS) {
         return {
             ...state,
@@ -31,3 +31,4 @@ export default (state = initialState, action: TagsActionTypes) => {
     }
     return state
 }
+export default r
