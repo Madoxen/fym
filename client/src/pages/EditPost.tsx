@@ -23,15 +23,13 @@ export const EditPost: React.FC = () => {
     }
 
     const getActiveTags: Function = (tags: ITags[]): void => {
-        PostPOST.tagids = tags.map(tag=>tag.tagid);
+        PostPOST.tagids = tags.map(tag => tag.tagid);
     }
 
     //TODO SEND Post :)
-   
+
     const SendChanges = (): void => {
-        history.push({
-            pathname: '/profile'
-        })
+
 
         fetch(process.env.REACT_APP_API_URL + '/posts/' + location.state.post.username + "/" + location.state.post.postid, {
             method: 'PATCH',
@@ -49,6 +47,10 @@ export const EditPost: React.FC = () => {
             .catch((e) => {
                 //handle failure
             })
+
+        history.push({
+            pathname: '/profile'
+        })
     }
 
 

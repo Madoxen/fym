@@ -31,28 +31,31 @@ store.subscribe(() => {
       clearTimeout(timeoutID);
 
 
-    setTimeout(() => fetch(process.env.REACT_APP_API_URL + '/auth/refresh', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-type': 'application/json; charset=UTF-8',
-        Authorization: "Bearer " + state.authTokens.refreshToken
-      },
-    })
-      .then((r) => r.json())
-      .then((r) =>
-        store.dispatch({
-          type: REPLACE_TOKENS,
-          tokens: { accessToken: r.acc, refreshToken: r.ref },
+    setTimeout(() => {
+      if (state.authTokens.refreshToken !== "")
+        fetch(process.env.REACT_APP_API_URL + '/auth/refresh', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: "Bearer " + state.authTokens.refreshToken
+          },
         })
-      ).catch(() => {
+          .then((r) => r.json())
+          .then((r) =>
+            store.dispatch({
+              type: REPLACE_TOKENS,
+              tokens: { accessToken: r.acc, refreshToken: r.ref },
+            })
+          ).catch(() => {
 
-        store.dispatch({
-          type: REPLACE_TOKENS,
-          tokens: { accessToken: "", refreshToken: "", accessTimeout: Infinity, refreshTimeout: Infinity },
-        })
+            store.dispatch({
+              type: REPLACE_TOKENS,
+              tokens: { accessToken: "", refreshToken: "", accessTimeout: Infinity, refreshTimeout: Infinity },
+            })
 
-      }), state.authTokens.accessTimeout * 1000 - Date.now());
+          })
+    }, state.authTokens.accessTimeout * 1000 - Date.now());
   }
 })
 
