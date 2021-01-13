@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react'
-import { ITagBox,ITags } from '../props/Interfaces'
+import React, { useEffect, useState } from 'react'
+import { ITagBox, ITags } from '../props/Interfaces'
 import { Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { useSelector } from 'react-redux';
@@ -10,17 +10,16 @@ interface Props {
     active?: number[];
 }
 
-const TagPanel: React.FC<Props> = ({updateTags,active}) => {
+const TagPanel: React.FC<Props> = ({ updateTags, active }) => {
 
     const tags = useSelector(getTags);
 
     useEffect(() => {
         setTagBoxes(assignTags());
-    }, [tags]);
+    }, [active]);
 
-    const isTagActive: Function = (tag: ITags): Boolean =>
-    {
-        if(active === undefined) return false;
+    const isTagActive: Function = (tag: ITags): Boolean => {
+        if (active === undefined) return false;
         let isActive = false;
         active.forEach(activeTag => activeTag === tag.tagid ? isActive = true : null);
         return isActive;
@@ -28,7 +27,7 @@ const TagPanel: React.FC<Props> = ({updateTags,active}) => {
 
     const assignTags: Function = (): ITagBox[] => {
         let tagArr: ITagBox[] = []
-        tags.forEach(tag => tagArr.push({tagid: tag.tagid,name: tag.name,active: isTagActive(tag)}));
+        tags.forEach(tag => tagArr.push({ tagid: tag.tagid, name: tag.name, active: isTagActive(tag) }));
         return tagArr;
     }
     const [tagBoxes, setTagBoxes] = useState<ITagBox[]>(assignTags());
@@ -37,17 +36,17 @@ const TagPanel: React.FC<Props> = ({updateTags,active}) => {
     const boxes: Function = (): JSX.Element[] => {
         let tagBoxArray: JSX.Element[] = [];
         tagBoxes.forEach(tagBox => tagBoxArray.push(
-            <Button 
-                className="ml-1 mr-1 p-1 rounded"
+            <Button
+                className="ml-1 mr-1 p-1 m-2 rounded"
                 key={tagBox.tagid}
                 size="sm"
                 onClick={() => tagClick(tagBox.tagid)}
-                variant={tagBox.active? 'primary':'scondary'}
+                variant={tagBox.active ? 'primary' : 'scondary'}
                 onMouseDown={(e) => e.preventDefault()}
-            > 
-            {tagBox.name}
+            >
+                {tagBox.name}
             </Button>
-            ));
+        ));
         return tagBoxArray;
     }
 
@@ -61,7 +60,7 @@ const TagPanel: React.FC<Props> = ({updateTags,active}) => {
         updateTags(ArrActive);
     }
 
-    return(
+    return (
         <div className="m-3">
             {boxes()}
         </div>

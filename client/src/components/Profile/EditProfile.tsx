@@ -49,6 +49,8 @@ const EditProfile: React.FC<Props> = ({ user }) => {
 
     return (
         <Fragment>
+
+
             <div className="edit-profile">
                 <FormGroup>
                     <FormLabel> Your tags</FormLabel>
@@ -92,7 +94,7 @@ const EditProfile: React.FC<Props> = ({ user }) => {
                 </FormGroup>
 
             </div>
-        </Fragment>
+        </ Fragment >
     )
 };
 export default EditProfile
