@@ -11,6 +11,7 @@ import { useHistory } from 'react-router-dom'
 export const AddPost: React.FC = () => {
     const acc = useSelector(getAccessToken);
     const username = useSelector(getUsername);
+    const history = useHistory();
 
     //POST to POST HAAHAHAH
     const PostPOST: IPostPOST = {
