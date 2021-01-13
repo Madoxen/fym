@@ -13,17 +13,6 @@ export const AddPost: React.FC = () => {
     const username = useSelector(getUsername);
     const history = useHistory();
 
-    //TAGS
-    const [tags, setTags] = useState<ITags[]>([])
-    //TAGS
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
-        fetchFunction('/tags', setTags);
-    }
-
     //POST to POST HAAHAHAH
     const PostPOST: IPostPOST = {
         content: "",
@@ -32,12 +21,7 @@ export const AddPost: React.FC = () => {
     }
 
     const getActiveTags: Function = (tags: ITags[]): void => {
-        var ids: number[] = []
-
-        tags.map(tag => {
-            ids.push(tag.tagid)
-        })
-        PostPOST.tagids = ids
+        PostPOST.tagids = tags.map(tag => tag.tagid);
     }
 
     //TODO SEND Post :)

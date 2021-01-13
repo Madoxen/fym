@@ -16,8 +16,6 @@ export const EditPost: React.FC = () => {
     const history = useHistory();
     const acc = useSelector(getAccessToken);
 
-    const tags = useSelector(getTags);
-
     const PostPOST: IPostPOST = {
         content: location.state.post.content,
         title: location.state.post.title,
@@ -25,12 +23,7 @@ export const EditPost: React.FC = () => {
     }
 
     const getActiveTags: Function = (tags: ITags[]): void => {
-        var ids: number[] = []
-
-        tags.map(tag => {
-            ids.push(tag.tagid)
-        })
-        PostPOST.tagids = ids
+        PostPOST.tagids = tags.map(tag=>tag.tagid);
     }
 
     //TODO SEND Post :)
@@ -59,22 +52,6 @@ export const EditPost: React.FC = () => {
     }
 
 
-    const tagOfId: Function = (id: number): ITags => {
-        let returnTag: ITags = {
-            tagid: id,
-            name: ""
-        }
-        tags.forEach(tag => tag.tagid === id ? returnTag = tag : null);
-        return returnTag;
-    }
-
-    const tagList: Function = (arr: number[]): ITags[] => {
-        let TagsArr: ITags[] = []
-        arr.map(tagid => TagsArr.push(tagOfId(tagid)))
-        return TagsArr
-    }
-
-
     return (
         <Fragment>
             <h1>Edit Post</h1>
@@ -93,7 +70,7 @@ export const EditPost: React.FC = () => {
                 <FormGroup>
                     <FormLabel>Your labels</FormLabel>
                 </FormGroup>
-                <TagPanel updateTags={getActiveTags} active={tagList(location.state.post.tagids)}></TagPanel>
+                <TagPanel updateTags={getActiveTags} active={location.state.post.tagids}></TagPanel>
 
 
                 <FormGroup>
