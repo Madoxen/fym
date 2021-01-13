@@ -37,7 +37,7 @@ const TagPanel: React.FC<Props> = ({ updateTags, active }) => {
         let tagBoxArray: JSX.Element[] = [];
         tagBoxes.forEach(tagBox => tagBoxArray.push(
             <Button
-                className="ml-1 mr-1 p-1 m-2 rounded"
+                className="p-1 m-2 rounded"
                 key={tagBox.tagid}
                 size="sm"
                 onClick={() => tagClick(tagBox.tagid)}
@@ -61,7 +61,7 @@ const TagPanel: React.FC<Props> = ({ updateTags, active }) => {
     }
 
     return (
-        <div className="m-3">
+        <div className="tag-panel m-3">
             {boxes()}
         </div>
     )

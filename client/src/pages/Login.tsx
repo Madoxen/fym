@@ -62,7 +62,7 @@ export const Login: React.FC = () => {
                     <FormLabel>User name</FormLabel>
                     <FormControl
                         type="text"
-                        onChange={(e) => setUsernameLogin(e.target.value)}
+                        onChange={(e) => setUsernameLogin(e.target.value.trim())}
                     ></FormControl>
 
                 </FormGroup>
@@ -70,7 +70,7 @@ export const Login: React.FC = () => {
                     <FormLabel>Password</FormLabel>
                     <FormControl
                         type="password"
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value.trim())}
                     >
 
                     </FormControl>

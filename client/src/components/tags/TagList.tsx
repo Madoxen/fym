@@ -8,32 +8,30 @@ interface Props {
     tagids: number[];
 }
 
-const TagList: React.FC<Props> = ({tagids}) => {
+const TagList: React.FC<Props> = ({ tagids }) => {
 
     const tags = useSelector(getTags);
 
-    const listTags: Function = (): JSX.Element[] => 
-    {
-        let tagArray:JSX.Element[] = [];
+    const listTags: Function = (): JSX.Element[] => {
+        let tagArray: JSX.Element[] = [];
         tagids.forEach(tagId => tagArray.push(
-            <Badge 
-            pill 
-            variant="primary" 
-            key={tagId} 
-            style={{color: 'white',fontWeight: 'normal',fontSize: "12px",margin: "0px 10px 0px 0px"}}
+            <Badge
+                pill
+                variant="primary"
+                key={tagId}
+                style={{ color: 'white', fontWeight: 'normal', fontSize: "12px", margin: "0px 10px 5px 0px" }}
             >{tagOfId(tagId)}</Badge>
-            ));
+        ));
         return tagArray;
     }
 
-    const tagOfId: Function = (id: number): string =>
-    {
-        let tagName:string = "";
+    const tagOfId: Function = (id: number): string => {
+        let tagName: string = "";
         tags.forEach(tag => tag.tagid === id ? tagName = tag.name : null);
         return tagName;
     }
 
-    return(
+    return (
         <div className="d-flex">
             {listTags()}
         </div>
