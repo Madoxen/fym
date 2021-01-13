@@ -9,7 +9,7 @@ const initialState = {
     accessTimeout: Infinity, // Time to token refresh
 }
 
-export default (state = initialState, action: TokensActionTypes) => {
+const r = (state = initialState, action: TokensActionTypes) => {
     if (action.type === REPLACE_TOKENS) {
         try {
             const decodedAcc = jwt.decode(action.tokens.accessToken, {
@@ -33,3 +33,5 @@ export default (state = initialState, action: TokensActionTypes) => {
     }
     return state
 }
+
+export default r

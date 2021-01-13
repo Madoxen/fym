@@ -1,25 +1,21 @@
 
 const initialState = {
-  username: ""
+    username: ""
 }
 
 export const SET_USERNAME = 'SET_USERNAME'
 
-interface ISetUsername{
+interface ISetUsername {
     type: typeof SET_USERNAME
     username: string;
 }
 
-interface IUsernameState
-{
-    username: string;
-}
-export type LoginActionTypes = ISetUsername 
+export type LoginActionTypes = ISetUsername
 
 
-export default (state = initialState, action: LoginActionTypes) => {
+const r = (state = initialState, action: LoginActionTypes) => {
     if (action.type === SET_USERNAME) {
-        
+
         return {
             ...state,
             username: action.username,
@@ -36,3 +32,4 @@ export function setUsername(name: string): ISetUsername {
 }
 
 export const getUsername = (state: any) => state.username.username
+export default r

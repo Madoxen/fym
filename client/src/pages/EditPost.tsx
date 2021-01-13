@@ -5,7 +5,6 @@ import { ITags, IPostPOST, IPost } from '../components/props/Interfaces'
 import { useLocation, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { getAccessToken } from '../features/auth/selectors'
-import { getTags } from '../features/tags/tagsReducer'
 
 interface Ilocal {
     post: IPost
@@ -23,7 +22,7 @@ export const EditPost: React.FC = () => {
     }
 
     const getActiveTags: Function = (tags: ITags[]): void => {
-        PostPOST.tagids = tags.map(tag => tag.tagid);
+        PostPOST.tagids = tags.map((tag) => { return tag.tagid });
     }
 
     //TODO SEND Post :)
