@@ -1,17 +1,16 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import EditProfile from '../components/Profile/EditProfile'
-import { IPost, ITags, IUser } from '../components/props/Interfaces'
+import { IPost } from '../components/props/Interfaces'
 import PostBoard from '../components/search/PostBoard'
 import { useHistory } from 'react-router-dom'
-import { fetchFunction } from '../components/api/FetchFunction'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { getUsername } from '../features/login/loginReducer'
+import { getAccessToken } from '../features/auth/selectors'
 
 
 export const Profile: React.FC = () => {
     let history = useHistory();
 
-    const dispatch = useDispatch();
     const username = useSelector(getUsername);
     const [user, setUser] = useState({
         "username": "",
@@ -21,7 +20,8 @@ export const Profile: React.FC = () => {
         "tagids": []
     });
 
-    const [userPosts, setUserPosts] = useState([]);
+    const [userPosts, setUserPosts] = useState<IPost[]>([]);
+    const acc = useSelector(getAccessToken);
 
 
     useEffect(() => {
@@ -52,53 +52,12 @@ export const Profile: React.FC = () => {
     }, [])  // <-- add this empty array here
 
 
-
-
+    useEffect(() => {
+        setUserPosts(userPosts);
+      }, [userPosts]);
 
     const users = [
         user
-    ]
-    //TAGS
-    const [tags, setTags] = useState<ITags[]>([])
-    //TAGS
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
-        fetchFunction('/tags', setTags);
-    }
-
-    const UserPosts = [
-        {
-            "postid": 13,
-            "userid": 3,
-            "content": "1 Yes this is another post like that :D",
-            "title": "1 Anotha one",
-            "tagids": [
-                2
-            ]
-        },
-        {
-            "postid": 14,
-            "userid": 2,
-            "content": "2 Yes this is another post like that :D",
-            "title": "2 Anotha one",
-            "tagids": [
-                2
-            ]
-        },
-        {
-            "postid": 15,
-            "userid": 2,
-            "content": "3 Yes this is another post like that :D",
-            "title": "3 Anotha one",
-            "tagids": [
-                1,
-                2
-            ]
-
-        }
     ]
 
     const getActivePost: Function = (post: IPost): void => {
@@ -108,12 +67,43 @@ export const Profile: React.FC = () => {
         })
     }
 
+
+    const deletePost: Function = (post: IPost): void => {
+
+        fetch(process.env.REACT_APP_API_URL + '/posts/' + username + "/" + post.postid, {
+            method: 'DELETE',
+            headers: {
+                Authorization: "Bearer " + acc,
+                Accept: 'application/json',
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+        })
+            .then((r) => {
+                console.log(r.status)
+                if (r.ok) {
+                    return r.json();
+                }
+                else {
+                    throw r.statusText
+                }
+            })
+            .then((r) =>
+                //200 received, body transpiled to object
+                { 
+                    
+                }
+            )
+            .catch(
+                //failure like CORS or other exceptions
+                r => { })
+    }
+
     return (
         <Fragment>
             <h1 style={{ textAlign: "center" }}>Edit Your Profile</h1>
-            <EditProfile user={user} tags={tags}></EditProfile>
+            <EditProfile user={user}></EditProfile>
             <h1 style={{ textAlign: "center" }}>Your Post</h1>
-            <PostBoard posts={userPosts} tags={tags} edit={getActivePost}></PostBoard>
+            <PostBoard posts={userPosts} edit={getActivePost} del={deletePost}></PostBoard>
         </Fragment>
     )
 }

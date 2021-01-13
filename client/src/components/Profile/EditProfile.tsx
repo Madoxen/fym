@@ -7,9 +7,8 @@ import TagPanel from '../tags/TagPanel'
 
 interface Props {
     user: IUser,
-    tags: ITags[]
 }
-const EditProfile: React.FC<Props> = ({ user, tags }) => {
+const EditProfile: React.FC<Props> = ({ user }) => {
 
     const acc = useSelector(getAccessToken);
 
@@ -53,7 +52,7 @@ const EditProfile: React.FC<Props> = ({ user, tags }) => {
             <div className="edit-profile">
                 <FormGroup>
                     <FormLabel> Your tags</FormLabel>
-                    <TagPanel tags={tags} updateTags={getActiveTags} active={UserPOST.tagids}></TagPanel>
+                    <TagPanel updateTags={getActiveTags} active={UserPOST.tagids}></TagPanel>
                 </FormGroup>
                 <FormGroup>
                     <FormLabel>Email</FormLabel>

@@ -1,11 +1,11 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment } from 'react'
 import { Button, FormControl, FormGroup, FormLabel } from 'react-bootstrap'
 import TagPanel from '../components/tags/TagPanel'
 import { ITags, IPostPOST, IPost } from '../components/props/Interfaces'
 import { useLocation, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { getAccessToken } from '../features/auth/selectors'
-import { fetchFunction } from '../components/api/FetchFunction'
+import { getTags } from '../features/tags/tagsReducer'
 
 interface Ilocal {
     post: IPost
@@ -16,23 +16,14 @@ export const EditPost: React.FC = () => {
     const history = useHistory();
     const acc = useSelector(getAccessToken);
 
-    const [tags, setTags] = useState<ITags[]>([])
-    //TAGS
-    useEffect(() => {
-        fetchData();
-    }, []);
+    const tags = useSelector(getTags);
 
-    const fetchData = async () => {
-        fetchFunction('/tags', setTags);
-    }
-
-
-    //POST to POST HAAHAHAH
     const PostPOST: IPostPOST = {
         content: location.state.post.content,
         title: location.state.post.title,
         tagids: location.state.post.tagids
     }
+
     const getActiveTags: Function = (tags: ITags[]): void => {
         var ids: number[] = []
 
@@ -102,7 +93,7 @@ export const EditPost: React.FC = () => {
                 <FormGroup>
                     <FormLabel>Your labels</FormLabel>
                 </FormGroup>
-                <TagPanel tags={tags} updateTags={getActiveTags} active={tagList(location.state.post.tagids)}></TagPanel>
+                <TagPanel updateTags={getActiveTags} active={tagList(location.state.post.tagids)}></TagPanel>
 
 
                 <FormGroup>

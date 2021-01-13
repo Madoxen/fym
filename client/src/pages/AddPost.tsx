@@ -76,7 +76,7 @@ export const AddPost: React.FC = () => {
                 <FormGroup>
                     <FormLabel>Add tags to your posts this will help another find your offert</FormLabel>
                 </FormGroup>
-                <TagPanel tags={tags} updateTags={getActiveTags}></TagPanel>
+                <TagPanel updateTags={getActiveTags}></TagPanel>
 
 
                 <FormGroup>

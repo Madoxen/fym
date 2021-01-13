@@ -1,13 +1,16 @@
 import React from 'react'
 import { Badge } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
+import { getTags } from '../../features/tags/tagsReducer';
 import { ITags } from '../props/Interfaces'
 
 interface Props {
-    tags: ITags[];
     tagids: number[];
 }
 
-const TagList: React.FC<Props> = ({tagids,tags}) => {
+const TagList: React.FC<Props> = ({tagids}) => {
+
+    const tags = useSelector(getTags);
 
     const listTags: Function = (): JSX.Element[] => 
     {
